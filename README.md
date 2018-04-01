@@ -19,3 +19,7 @@ Download Ganache: `brew cask install ganache` or visit Ganache's website. Then s
 Every time you change the contract, do `truffle compile`.
 
 To start testing a contract on the test Ganache blockchain, do `truffle migrate`.
+
+## Unit tests
+
+`truffle test`

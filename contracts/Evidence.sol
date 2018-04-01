@@ -8,8 +8,8 @@ contract Evidence {
   uint image;
   string description;
   uint violation_type;
-  bool bought;
-  bool previewed;
+  bool public bought;
+  bool public previewed;
   uint price; //in Ether, assume 8 decimal places
 
   // modifier restricted() {
@@ -53,10 +53,22 @@ contract Evidence {
 
   function purchase() public {
     bought = true;
+    previewed = true;
   }
 
   function square(uint x) public pure returns (uint) {
     return x * x;
   }
+
+  function eatMoney() public payable returns (bool) {
+    // send 1 ether or else
+    /* require(msg.value >= 1 ether); */
+
+    bool success = true;
+    return success;
+  }
+
+  // fallback fn
+  function() payable { }
 
 }
