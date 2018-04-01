@@ -16,7 +16,7 @@ contract Evidence {
   //   if (msg.sender == owner) _;
   // }
 
-  function Evidence(uint _image, int _lat, int _long, uint _price, string _desc, address _receiver, uint _violation_type) {
+  function Evidence(uint _image, int _lat, int _long, uint _price, string _desc, address _receiver, uint _violation_type) public {
     // constructor
     creator = msg.sender;
     receiver = _receiver;
@@ -39,7 +39,7 @@ contract Evidence {
 
   }
 
-  function preview() public constant returns (uint _image) {
+  function preview() public returns (uint _image) {
     if (bought == true){
       // if person checking is the receiver? Can we check that?
       _image = image;
@@ -51,7 +51,7 @@ contract Evidence {
     }
   }
 
-  function purchase() {
+  function purchase() public {
     bought = true;
   }
 
