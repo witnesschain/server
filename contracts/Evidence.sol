@@ -39,7 +39,7 @@ contract Evidence {
 
   }
 
-  function preview() public constant returns (uint8 _image) {
+  function preview() public constant returns (uint _image) {
     if (bought == true){
       // if person checking is the receiver? Can we check that?
       _image = image;
