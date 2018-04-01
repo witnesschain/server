@@ -69,6 +69,6 @@ contract Evidence {
   }
 
   // fallback fn
-  function() payable { }
+  function() public payable { }
 
 }

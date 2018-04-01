@@ -41,6 +41,7 @@ contract TestEvidence {
 
   function testMoney() public {
     bool out = evid.eatMoney.value(5 ether).gas(1000000000)();
+    /* bool out = evid.eatMoney(); */
 
     Assert.equal(out, true, "should be enough money");
   }
