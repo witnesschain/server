@@ -35,18 +35,24 @@ contract Evidence {
     bought = false;
     previewed = false;
 
+    image = _image;
+
+  }
+
+  function preview() public constant returns (uint8 _image) {
+    if (bought == true){
+      // if person checking is the receiver? Can we check that?
+      _image = image;
+    } else {
+      if (previewed == false){
+        previewed = true;
+        _image = image;
+      }
+    }
   }
 
   function purchase() {
-
+    bought = true;
   }
 
-  function setCompleted(uint completed) restricted {
-    last_completed_migration = completed;
-  }
-
-  function upgrade(address new_address) restricted {
-    Migrations upgraded = Migrations(new_address);
-    upgraded.setCompleted(last_completed_migration);
-  }
 }
