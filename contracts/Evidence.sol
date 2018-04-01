@@ -60,11 +60,14 @@ contract Evidence {
     return x * x;
   }
 
-  function eatMoney() public payable {
+  function eatMoney() public payable returns (bool _success) {
     // send 1 ether or else
     require(msg.value >= 2 ether);
 
     bought = true;
+
+    _success = true;
+    
   }
 
   // fallback fn

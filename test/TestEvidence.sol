@@ -43,12 +43,12 @@ contract TestEvidence {
   }
 
   function testMoney() public {
-    evid.eatMoney.value(3 ether)();
+    bool out = evid.eatMoney.value(3 ether)();
 
     /* Assert.equal() */
 
     /* evid.eatMoney(); */
 
-    /* Assert.equal(out, true, "should be enough money"); */
+    Assert.equal(out, true, "should be enough money");
   }
 }
