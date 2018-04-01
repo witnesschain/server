@@ -62,9 +62,9 @@ contract Evidence {
 
   function eatMoney() public payable {
     // send 1 ether or else
-    /* require(msg.value >= 1 ether); */
+    require(msg.value >= 2 ether);
 
-    /* bought = true; */
+    bought = true;
   }
 
   // fallback fn

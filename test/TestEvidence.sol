@@ -43,7 +43,7 @@ contract TestEvidence {
   }
 
   function testMoney() public {
-    evid.eatMoney.value(3 ether)();
+    evid.eatMoney.value(1 ether)();
 
     /* Assert.equal() */
 
