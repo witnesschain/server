@@ -40,6 +40,12 @@ contract TestEvidence {
     // ensure the preview thing is set properly
     bool previewed = evid.previewed();
     Assert.equal(previewed, true, "Preview should set previewed=true");
+
+    // preview twice
+
+    imageOut = evid.preview();
+    Assert.equal(0, imageOut, "Should not be able to preview twice");
+
   }
 
   function testMoney() public {
@@ -54,5 +60,9 @@ contract TestEvidence {
     bool bought = evid.bought();
 
     Assert.equal(bought, true, "Bought is true");
+
+    uint imageOut = evid.preview();
+    Assert.equal(image, imageOut, "Preview should return original image");
+
   }
 }

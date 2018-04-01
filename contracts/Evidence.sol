@@ -47,6 +47,8 @@ contract Evidence {
       if (previewed == false){
         previewed = true;
         _image = image;
+      } else {
+        _image = 0;
       }
     }
   }
