@@ -50,5 +50,9 @@ contract TestEvidence {
     /* evid.eatMoney(); */
 
     Assert.equal(out, true, "should be enough money");
+
+    bool bought = evid.bought();
+
+    Assert.equal(bought, true, "Bought is true");
   }
 }
