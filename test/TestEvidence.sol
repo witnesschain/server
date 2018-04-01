@@ -5,6 +5,9 @@ import "truffle/DeployedAddresses.sol";
 import "../contracts/Evidence.sol";
 
 contract TestEvidence {
+  // Truffle will send the TestContract some Ether after deploying the contract.
+  uint public initialBalance = 10 ether;
+
   Evidence evidence = Evidence(DeployedAddresses.Evidence());
 
   uint image = 5;
@@ -12,7 +15,7 @@ contract TestEvidence {
   int lon = -7300000000;
   uint price = 12345;
   string desc = "hello";
-  address receiver = 0x12345678901234567890;
+  address receiver = 0xf17f52151EbEF6C7334FAD080c5704D77216b732;
   uint violation_type = 1;
   Evidence evid = new Evidence(image, lat, lon, price, desc, receiver, violation_type);
 
@@ -40,7 +43,10 @@ contract TestEvidence {
   }
 
   function testMoney() public {
-    evid.eatMoney.value(10)();
+    evid.eatMoney.value(3 ether)();
+
+    /* Assert.equal() */
+
     /* evid.eatMoney(); */
 
     /* Assert.equal(out, true, "should be enough money"); */
