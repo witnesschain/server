@@ -40,7 +40,7 @@ contract TestEvidence {
   }
 
   function testMoney() public {
-    evid.eatMoney.value(10).gas(100000)();
+    evid.eatMoney.value(10)();
     /* evid.eatMoney(); */
 
     /* Assert.equal(out, true, "should be enough money"); */
