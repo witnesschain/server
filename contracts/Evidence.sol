@@ -55,4 +55,8 @@ contract Evidence {
     bought = true;
   }
 
+  function square(uint x) public pure returns (uint) {
+    return x * x;
+  }
+
 }
