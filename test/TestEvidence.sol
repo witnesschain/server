@@ -13,7 +13,7 @@ contract TestEvidence {
   uint image = 5;
   int lat = 4200000000;
   int lon = -7300000000;
-  uint price = 12345;
+  uint price = 1 ether;
   string desc = "hello";
   address receiver = 0xf17f52151EbEF6C7334FAD080c5704D77216b732;
   uint violation_type = 1;
@@ -48,17 +48,22 @@ contract TestEvidence {
 
   }
 
-  function testMoney() public {
-    bool out = evid.eatMoney.value(3 ether)();
-
-    Assert.equal(out, true, "should be enough money");
-
+  function testPurchase() public {
+    // 1 finney = 1/1000 ether
+    // this should not purchase
+    bool out = evid.purchase.value(10 finney)();
     bool bought = evid.bought();
+    Assert.equal(out, false, "Payment should not succeed");
+    Assert.equal(bought, false, "Not bought");
 
+    // now pay the proper amount
+    out = evid.purchase.value(3 ether)();
+    Assert.equal(out, true, "Should be enough money for payment to succeed");
+
+    bought = evid.bought();
     Assert.equal(bought, true, "Bought is true");
 
     uint imageOut = evid.preview();
     Assert.equal(image, imageOut, "Preview should return original image");
-
   }
 }

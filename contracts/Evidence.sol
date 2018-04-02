@@ -53,24 +53,37 @@ contract Evidence {
     }
   }
 
-  function purchase() public {
-    bought = true;
-    previewed = true;
+  function purchase() public payable returns (bool) {
+    bool success = false;
+
+    if (msg.value >= price) {
+      // success, buy!
+      bought = true;
+      previewed = true;
+
+      success = true;
+    }
+    else {
+      // not enough $$$
+      success = false;
+    }
+
+    return success;
   }
 
   function square(uint x) public pure returns (uint) {
     return x * x;
   }
 
-  function eatMoney() public payable returns (bool _success) {
+  /* function eatMoney() public payable returns (bool _success) {
     // send 1 ether or else
     require(msg.value >= 1 ether);
 
     bought = true;
 
     _success = true;
-    
-  }
+
+  } */
 
   // fallback fn
   function() public payable { }
