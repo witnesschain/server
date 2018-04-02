@@ -49,7 +49,9 @@ contract TestEvidence {
 
   function testPurchase() public {
     // we'll need this later, store it now
+    address self = this;
     uint256 creatorBalanceBefore = creator.balance;
+    uint256 ourBalanceBefore = self.balance;
 
     // 1 finney = 1/1000 ether
     // this should not purchase
@@ -59,7 +61,9 @@ contract TestEvidence {
     Assert.equal(bought, false, "Not bought");
 
     uint256 creatorBalanceNoTxn = creator.balance;
+    uint256 ourBalanceNoTxn = self.balance;
     Assert.equal(creatorBalanceBefore, creatorBalanceNoTxn, "Creator should not be paid");
+    Assert.equal(ourBalanceBefore, ourBalanceNoTxn, "Buyer should be refunded");
 
     // now pay the proper amount
     out = evid.purchase.value(3 ether)();
@@ -73,7 +77,10 @@ contract TestEvidence {
 
     uint256 creatorBalanceAfter = creator.balance;
     uint256 creatorBalanceAfterPredicted = creatorBalanceBefore + price;
+    uint256 ourBalanceAfter = self.balance;
+    uint256 ourBalanceAfterPredicted = ourBalanceBefore - price;
     Assert.equal(creatorBalanceAfterPredicted, creatorBalanceAfter, "Creator should be paid");
+    Assert.equal(ourBalanceAfterPredicted, ourBalanceAfter, "Buyer should pay");
   }
 
   // fallback fn
