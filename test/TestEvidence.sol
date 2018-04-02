@@ -75,4 +75,7 @@ contract TestEvidence {
     uint256 creatorBalanceAfterPredicted = creatorBalanceBefore + price;
     Assert.equal(creatorBalanceAfterPredicted, creatorBalanceAfter, "Creator should be paid");
   }
+
+  // fallback fn
+  function() public payable { }
 }

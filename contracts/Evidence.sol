@@ -54,6 +54,8 @@ contract Evidence {
   }
 
   function purchase() public payable returns (bool) {
+    // TODO for all these functions, ensure that the caller is
+    // the receiver
     bool success = false;
 
     if (msg.value >= price) {
@@ -72,7 +74,8 @@ contract Evidence {
     }
 
     // refund any extra $$$ sent to this contract
-    msg.sender.transfer(1 szabo);
+    address self = this;
+    msg.sender.transfer(self.balance);
 
     return success;
   }
