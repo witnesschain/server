@@ -21,8 +21,8 @@ contract TestEvidence {
   Evidence evid = new Evidence(image, lat, lon, price, desc, creator, receiver, violation_type);
 
 
-
   function testDumb() public {
+    // just to make sure the testing suite works
     uint a = 5;
     Assert.equal(a, a, "hello world");
   }
