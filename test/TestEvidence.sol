@@ -15,9 +15,11 @@ contract TestEvidence {
   int lon = -7300000000;
   uint price = 1 ether;
   string desc = "hello";
-  address receiver = 0xf17f52151EbEF6C7334FAD080c5704D77216b732;
+  address creator = 0xf17f52151EbEF6C7334FAD080c5704D77216b732;
+  address receiver = this;
   uint violation_type = 1;
-  Evidence evid = new Evidence(image, lat, lon, price, desc, receiver, violation_type);
+  Evidence evid = new Evidence(image, lat, lon, price, desc, creator, receiver, violation_type);
+
 
 
   function testDumb() public {
@@ -25,11 +27,8 @@ contract TestEvidence {
     Assert.equal(a, a, "hello world");
   }
 
-  function testBasicEvidence() public {
-    uint a = 6;
-    uint asq = evidence.square(a);
-    uint asqExpected = a * a;
-    Assert.equal(asq, asqExpected, "square works");
+  function testCreation() public {
+    Assert.equal(evid.receiver(), this, "This contract is the receiver");
   }
 
   function testPreview() public {

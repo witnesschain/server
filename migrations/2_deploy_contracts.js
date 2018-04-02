@@ -7,7 +7,8 @@ module.exports = function(deployer) {
   var lon = -7300000000;
   var price = 12345;
   var desc = "hello";
+  var creator = 12345678901234567890;
   var receiver = 12345678901234567890;
   var violation_type = 1;
-  deployer.deploy(Evidence, image, lat, lon, price, desc, receiver, violation_type);
+  deployer.deploy(Evidence, image, lat, lon, price, desc, creator, receiver, violation_type);
 };

@@ -1,7 +1,7 @@
 pragma solidity ^0.4.21;
 
 contract Evidence {
-  address private creator;
+  address public creator;
   address public receiver;
   int latitude; //assume 8 decimal points
   int longitude; //assume 8 decimal points
@@ -16,9 +16,9 @@ contract Evidence {
   //   if (msg.sender == owner) _;
   // }
 
-  function Evidence(uint _image, int _lat, int _long, uint _price, string _desc, address _receiver, uint _violation_type) public {
+  function Evidence(uint _image, int _lat, int _long, uint _price, string _desc, address _creator, address _receiver, uint _violation_type) public {
     // constructor
-    creator = msg.sender;
+    creator = _creator;
     receiver = _receiver;
 
     latitude = _lat;
@@ -61,6 +61,9 @@ contract Evidence {
       bought = true;
       previewed = true;
 
+      // send `price` ethers to the creator who submitted it
+      /* creator.transfer(price); */
+
       success = true;
     }
     else {
@@ -71,9 +74,9 @@ contract Evidence {
     return success;
   }
 
-  function square(uint x) public pure returns (uint) {
+  /* function square(uint x) public pure returns (uint) {
     return x * x;
-  }
+  } */
 
   /* function eatMoney() public payable returns (bool _success) {
     // send 1 ether or else
