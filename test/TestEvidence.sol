@@ -6,7 +6,7 @@ import "../contracts/Evidence.sol";
 
 contract TestEvidence {
   // Truffle will send the TestContract some Ether after deploying the contract.
-  uint public initialBalance = 10 ether;
+  uint public initialBalance = 5 ether;
 
   Evidence evidence = Evidence(DeployedAddresses.Evidence());
 

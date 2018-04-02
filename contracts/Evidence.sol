@@ -62,7 +62,7 @@ contract Evidence {
       previewed = true;
 
       // send `price` ethers to the creator who submitted it
-      /* creator.transfer(price); */
+      creator.transfer(price);
 
       success = true;
     }
@@ -70,6 +70,9 @@ contract Evidence {
       // not enough $$$
       success = false;
     }
+
+    // refund any extra $$$ sent to this contract
+    /* msg.sender.transfer(this.balance); */
 
     return success;
   }
