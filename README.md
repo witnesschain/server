@@ -12,6 +12,8 @@ Test out contracts here: https://www.myetherwallet.com/#contracts
 
 Solidity tips: https://ethereumbuilders.gitbooks.io/guide/content/en/solidity_tutorials.html
 
+IPFS stuff: https://medium.com/@didil/off-chain-data-storage-ethereum-ipfs-570e030432cf
+
 ## Getting started
 
 Download Ganache: `brew cask install ganache` or visit Ganache's website. Then start the test blockchain via Ganache by double-clicking the app icon.
