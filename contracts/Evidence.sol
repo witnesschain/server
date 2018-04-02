@@ -72,7 +72,7 @@ contract Evidence {
     }
 
     // refund any extra $$$ sent to this contract
-    /* msg.sender.transfer(this.balance); */
+    msg.sender.transfer(1 szabo);
 
     return success;
   }
