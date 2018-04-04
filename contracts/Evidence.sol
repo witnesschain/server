@@ -12,6 +12,8 @@ contract Evidence {
   bool public previewed;
   uint price; //in Ether, assume 8 decimal places
 
+  event Previewed(uint _image);
+
   // modifier restricted() {
   //   if (msg.sender == owner) _;
   // }
@@ -56,6 +58,10 @@ contract Evidence {
         _image = 0;
       }
     }
+
+    // you can't send return values for a transaction,
+    // so we should raise an event instead
+    emit Previewed(_image);
   }
 
   function purchase() public payable returns (bool) {
