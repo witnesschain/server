@@ -28,6 +28,10 @@ Every time you change the contract, do `truffle compile`.
 
 To start testing a contract on the test Ganache blockchain, do `truffle migrate`.
 
+## Running server
+
+First do `npm install`. To run make sure Ganache is running, then do `truffle migrate`, then `node index.js`.
+
 ## Unit tests
 
 `truffle test`
