@@ -19,6 +19,7 @@ Evidence.deployed().then(function(_instance) {
     return instance.preview({from: '0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef'});
 }).then(function(result) {
     console.log(result);
+    console.log(result.logs[0].args.image);
 
     return instance.previewed.call({from: '0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef'});
 }).then(function(result) {
