@@ -11,12 +11,18 @@ var Evidence = contract(EvidenceJSON);
 Evidence.setProvider(provider);
 
 // Use Truffle as usual
-Evidence.deployed().then(function(instance) {
-    // console.log(instance);
-    // console.log(Evidence);
+var instance;
+
+Evidence.deployed().then(function(_instance) {
+    instance = _instance;
     return instance.preview.call({from: '0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef'});
 }).then(function(result) {
     console.log(result.toNumber());
-}, function(error) {
-    console.log(error);
+
+    return instance.previewed();
+}).then(function(result) {
+    console.log(result);
 });
+// .error(function(err){
+//   console.log(err)
+// });
