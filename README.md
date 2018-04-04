@@ -1,3 +1,4 @@
+
 # Development
 
 Start with this: http://truffleframework.com/tutorials/pet-shop
@@ -14,6 +15,11 @@ Solidity tips: https://ethereumbuilders.gitbooks.io/guide/content/en/solidity_tu
 
 IPFS stuff: https://medium.com/@didil/off-chain-data-storage-ethereum-ipfs-570e030432cf
 
+To make a Node.js server: https://ethereum.stackexchange.com/questions/24684/truffle-and-node-js
+Example: https://github.com/gjeanmart/stackexchange/tree/master/24684-truffle-and-node-js
+
+For production purposes, may need Geth instead of Ganache: https://hackernoon.com/ethereum-development-walkthrough-part-2-truffle-ganache-geth-and-mist-8d6320e12269
+
 ## Getting started
 
 Download Ganache: `brew cask install ganache` or visit Ganache's website. Then start the test blockchain via Ganache by double-clicking the app icon.
@@ -21,6 +27,10 @@ Download Ganache: `brew cask install ganache` or visit Ganache's website. Then s
 Every time you change the contract, do `truffle compile`.
 
 To start testing a contract on the test Ganache blockchain, do `truffle migrate`.
+
+## Running server
+
+First do `npm install`. To run make sure Ganache is running, then do `truffle migrate`, then `node index.js`.
 
 ## Unit tests
 
