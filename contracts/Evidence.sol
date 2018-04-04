@@ -12,6 +12,8 @@ contract Evidence {
   bool public previewed;
   uint price; //in Ether, assume 8 decimal places
 
+  // ADD DATE TIME - https://github.com/pipermerriam/ethereum-datetime
+
   // modifier restricted() {
   //   if (msg.sender == owner) _;
   // }
