@@ -39,6 +39,11 @@ contract Evidence {
 
   }
 
+  function dummy(uint x) public pure returns (uint) {
+    uint x2 = x * x;
+    return x2;
+  }
+
   function preview() public returns (uint _image) {
     if (bought == true){
       // if person checking is the receiver? Can we check that?
