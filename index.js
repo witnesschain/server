@@ -12,9 +12,11 @@ Evidence.setProvider(provider);
 
 // Use Truffle as usual
 Evidence.deployed().then(function(instance) {
-    return instance.dummy.call(23, {from: '0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef'});
+    // console.log(instance);
+    // console.log(Evidence);
+    return instance.preview.call({from: '0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef'});
 }).then(function(result) {
-    console.log(result);
+    console.log(result.toNumber());
 }, function(error) {
     console.log(error);
 });
