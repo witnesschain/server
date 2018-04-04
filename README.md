@@ -1,3 +1,4 @@
+
 # Development
 
 Start with this: http://truffleframework.com/tutorials/pet-shop
@@ -13,6 +14,8 @@ Test out contracts here: https://www.myetherwallet.com/#contracts
 Solidity tips: https://ethereumbuilders.gitbooks.io/guide/content/en/solidity_tutorials.html
 
 IPFS stuff: https://medium.com/@didil/off-chain-data-storage-ethereum-ipfs-570e030432cf
+
+To make a Node.js server: https://ethereum.stackexchange.com/questions/24684/truffle-and-node-js
 
 ## Getting started
 

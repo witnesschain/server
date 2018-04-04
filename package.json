@@ -1,7 +1,7 @@
 {
   "name": "witness-chain",
   "version": "0.0.1",
-  "description": "",
+  "description": "WitnessChain",
   "main": "truffle.js",
   "directories": {
     "test": "test"
@@ -15,5 +15,7 @@
   "devDependencies": {
     "lite-server": "^2.3.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "npm": "^5.8.0"
+  }
 }
