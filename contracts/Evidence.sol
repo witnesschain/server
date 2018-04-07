@@ -13,6 +13,7 @@ contract Evidence {
   uint price; //in Ether, assume 8 decimal places
 
   event Previewed(uint image);
+  event Purchased(bool success);
 
   // modifier restricted() {
   //   if (msg.sender == owner) _;
@@ -91,6 +92,7 @@ contract Evidence {
     address self = this;
     msg.sender.transfer(self.balance);
 
+    emit Purchased(success);
     return success;
   }
 

@@ -17,6 +17,7 @@
     "lite-server": "^2.3.0"
   },
   "dependencies": {
+    "bignumber.js": "^6.0.0",
     "express": "^4.16.3",
     "truffle-contract": "^2.0.5",
     "web3": "0.19.0"
