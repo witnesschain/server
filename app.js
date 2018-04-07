@@ -48,6 +48,31 @@ app.post('/dummy', (req, res) => {
   dummy();
 });
 
+app.post('/new', (req, res) => {
+    const makeNew = async() => {
+      var image = 5;
+      var lat = 4200000000;
+      var lon = -7300000000;
+      var price = "1000000000000000000"; // 1 ether, in wei
+      var desc = "hello";
+      var creator = "0xf17f52151EbEF6C7334FAD080c5704D77216b732";
+      var receiver = "0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef";
+      var violation_type = 1;
+
+      // PROBLEM: having trouble with this. i always get "invalid address" error.
+      // try {
+        const newResult = await Evidence.new(image, lat, lon, price, desc, creator, receiver, violation_type)
+        console.log(newResult)
+        res.send("NEW")
+      // }
+      // catch (e) {
+      //   res.status(400).send("ERROR: " + e)
+      // }
+    }
+
+    makeNew()
+});
+
 // access with: http POST :3000/preview
 app.post('/preview', (req, res) => {
   // run the preview function, then return what was previewed
