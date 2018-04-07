@@ -63,8 +63,9 @@ app.post('/new', (req, res) => {
       // try {
         const newResult = await Evidence.new(image, lat, lon, price, desc, creator, receiver, violation_type, {from: '0xf17f52151EbEF6C7334FAD080c5704D77216b732', gas: 6721975 })
         // that gas limit is just the max that ganache offers, bit of a hack
-        console.log("ADDR: " + newResult.contract.address)
-        res.send("NEW")
+        console.log(newResult)
+        const newContractAddress = newResult.contract.address
+        res.send(`Your address is ${newContractAddress}`)
       // }
       // catch (e) {
       //   res.status(400).send("ERROR: " + e)
