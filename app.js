@@ -86,13 +86,14 @@ app.post('/purchase', (req, res) => {
       try {
         const purchaseResult = await instance.purchase({
           from: '0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef',
-          value: web3.toWei("1", "ether")
+          value: web3.toWei("2", "ether")
         })
         console.log(purchaseResult)
 
         const args = purchaseResult.logs[0].args
-        console.log(args)
-        res.send(`Args is ${args}`)
+        const success = args.success
+        console.log(success)
+        res.send(`Success is ${success}`)
       }
       catch (e) {
         res.status(400).send("ERROR: " + e)

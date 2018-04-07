@@ -73,7 +73,7 @@ contract Evidence {
     // the receiver
     bool success = false;
 
-    if (msg.value >= price) {
+    if (msg.value >= price && bought == false) {
       // success, buy!
       bought = true;
       previewed = true;
