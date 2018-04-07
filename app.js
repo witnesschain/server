@@ -59,19 +59,18 @@ app.post('/preview', (req, res) => {
         console.log(image)
         res.send(`Image is ${image}`)
       }
-      // const image = previewResult.logs[0].args.image
-      // console.log(image)
-      // let result = await instance.previewed.call()
-      // let previewImage = result.logs[0].args.image
-      // res.send(`Image is ${image}`)
-      res.send("SUCCESS")
     }
     else {
-      res.send("ERROR");
+      res.error("Instance does not exist")
     }
   }
 
-  preview();
+  try {
+    preview()
+  }
+  catch (e) {
+    console.error("Error: " + e)
+  }
 });
 
 // access with http :3000/previewed
@@ -82,11 +81,16 @@ app.get('/previewed', (req, res) => {
       res.send(`Previewed is ${out}`);
     }
     else {
-      res.send("ERROR");
+      res.error("Instance does not exist")
     }
   };
 
-  previewed();
+  try {
+    previewed()
+  }
+  catch (e) {
+    res.error("Error: " + e)
+  }
 });
 
   //
