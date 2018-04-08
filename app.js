@@ -17,10 +17,10 @@ var Evidence = contract(EvidenceJSON);
 Evidence.setProvider(provider);
 
 // for now assume there's a global instance
-var instance = null;
-Evidence.deployed().then(function(_instance) {
-    instance = _instance;
-});
+// var instance = null;
+// Evidence.deployed().then(function(_instance) {
+//     instance = _instance;
+// });
 
 // set up express
 var app = express();
@@ -35,23 +35,6 @@ app.use(bodyParser.json());
 // tester
 app.get('/hello', function (req, res) {
   res.send('Hello!!')
-});
-
-// With HTTPie, run
-//     http POST :3000/dummy
-app.post('/dummy', (req, res) => {
-  // run some test function
-  const dummy = async () => {
-    if (instance != null) {
-      var out = await instance.dummy(8);
-      res.send(`Your result is ${out}`);
-    }
-    else {
-      res.send("ERROR");
-    }
-  }
-
-  dummy();
 });
 
 app.post('/new', async (req, res) => {
@@ -144,68 +127,3 @@ app.post('/purchase', async (req, res) => {
     res.status(400).send("Error: " + e)
   }
 });
-
-
-//
-//
-//
-//
-//
-//
-// // access with: http POST :3000/purchase
-// app.post('/purchase', (req, res) => {
-//
-//   // TODO wrap this all in some meta checking code
-//   const purchase = async () => {
-//     if (instance != null) {
-//       console.log("yo")
-//       try {
-//         const purchaseResult = await instance.purchase({
-//           from: '0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef',
-//           value: web3.toWei("2", "ether")
-//         })
-//         console.log(purchaseResult)
-//
-//         const args = purchaseResult.logs[0].args
-//         const success = args.success
-//         console.log(success)
-//         res.send(`Success is ${success}`)
-//       }
-//       catch (e) {
-//         res.status(400).send("ERROR: " + e)
-//       }
-//
-//       // if (previewResult.logs[0]) {
-//       //   const image = previewResult.logs[0].args.image
-//       //   console.log(image)
-//       //   res.send(`Image is ${image}`)
-//       // }
-//     }
-//     else {
-//       res.status(400).send("Instance does not exist")
-//     }
-//   }
-//
-//   purchase()
-// });
-//
-//
-//
-// app.get('/previewed2', (req, res) => {
-//   const previewed = async () => {
-//     console.log("You said " + req.query.contract_address);
-//
-//     try {
-//       let inst = await Evidence.at(req.query.contract_address);
-//       console.log(inst);
-//
-//       var out = await inst.previewed.call();
-//       res.send(`Previewed is ${out}`);
-//     }
-//     catch(e) {
-//       res.status(400).send("Error: " + e);
-//     }
-//   };
-//
-//   previewed()
-// });
