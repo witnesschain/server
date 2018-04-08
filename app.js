@@ -97,7 +97,7 @@ app.post('/preview', async (req, res) => {
     if (previewResult.logs[0]) {
       const image = previewResult.logs[0].args.image
       console.log(image)
-      
+
       res.json({
         image: image
       })
@@ -106,106 +106,106 @@ app.post('/preview', async (req, res) => {
   catch(e) {
     res.status(400).send("Error: " + e);
   }
-
-  // // run the preview function, then return what was previewed
-  // const preview = async () => {
-  //   if (instance != null) {
-  //     console.log("hi")
-  //     const previewResult = await instance.preview({from: '0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef'})
-  //     console.log(previewResult)
-  //
-  //     if (previewResult.logs[0]) {
-  //       const image = previewResult.logs[0].args.image
-  //       console.log(image)
-  //       res.send(`Image is ${image}`)
-  //     }
-  //   }
-  //   else {
-  //     res.status(400).send("Instance does not exist")
-  //   }
-  // }
-  //
-  // try {
-  //   preview()
-  // }
-  // catch (e) {
-  //   console.error("Error: " + e)
-  // }
 });
 
-// access with: http POST :3000/purchase
-app.post('/purchase', (req, res) => {
-
-  // TODO wrap this all in some meta checking code
-  const purchase = async () => {
-    if (instance != null) {
-      console.log("yo")
-      try {
-        const purchaseResult = await instance.purchase({
-          from: '0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef',
-          value: web3.toWei("2", "ether")
-        })
-        console.log(purchaseResult)
-
-        const args = purchaseResult.logs[0].args
-        const success = args.success
-        console.log(success)
-        res.send(`Success is ${success}`)
-      }
-      catch (e) {
-        res.status(400).send("ERROR: " + e)
-      }
-
-      // if (previewResult.logs[0]) {
-      //   const image = previewResult.logs[0].args.image
-      //   console.log(image)
-      //   res.send(`Image is ${image}`)
-      // }
-    }
-    else {
-      res.status(400).send("Instance does not exist")
-    }
-  }
-
-  purchase()
-});
-
-// access with http :3000/previewed
-app.get('/previewed', (req, res) => {
-  const previewed = async () => {
-    if (instance != null) {
-      var out = await instance.previewed.call();
-      res.send(`Previewed is ${out}`);
-    }
-    else {
-      res.status(400).send("Instance does not exist")
-    }
-  };
-
+app.get('/previewed', async (req, res) => {
+  console.log("you said " + req.query.contract_address);
   try {
-    previewed()
+    let inst = await Evidence.at(req.query.contract_address);
+
+    var out = await inst.previewed.call();
+    res.json({
+      previewed: out
+    });
   }
-  catch (e) {
+  catch(e) {
+    res.status(400).send("Error: " + e);
+  }
+});
+
+app.post('/purchase', async (req, res) => {
+  try {
+    let inst = await Evidence.at(req.body.contract_address)
+
+    let purchaseResult = await inst.purchase({
+      from: req.body.receiver_address,
+      value: web3.toWei(req.body.money_amount + "", req.body.money_unit)
+    })
+    console.log(purchaseResult)
+
+    const args = purchaseResult.logs[0].args
+    const success = args.success
+    console.log(success)
+    res.json({
+      success: success
+    })
+  }
+  catch(e) {
     res.status(400).send("Error: " + e)
   }
 });
 
 
-app.get('/previewed2', (req, res) => {
-  const previewed = async () => {
-    console.log("You said " + req.query.contract_address);
-
-    try {
-      let inst = await Evidence.at(req.query.contract_address);
-      console.log(inst);
-
-      var out = await inst.previewed.call();
-      res.send(`Previewed is ${out}`);
-    }
-    catch(e) {
-      res.status(400).send("Error: " + e);
-    }
-  };
-
-  previewed()
-});
+//
+//
+//
+//
+//
+//
+// // access with: http POST :3000/purchase
+// app.post('/purchase', (req, res) => {
+//
+//   // TODO wrap this all in some meta checking code
+//   const purchase = async () => {
+//     if (instance != null) {
+//       console.log("yo")
+//       try {
+//         const purchaseResult = await instance.purchase({
+//           from: '0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef',
+//           value: web3.toWei("2", "ether")
+//         })
+//         console.log(purchaseResult)
+//
+//         const args = purchaseResult.logs[0].args
+//         const success = args.success
+//         console.log(success)
+//         res.send(`Success is ${success}`)
+//       }
+//       catch (e) {
+//         res.status(400).send("ERROR: " + e)
+//       }
+//
+//       // if (previewResult.logs[0]) {
+//       //   const image = previewResult.logs[0].args.image
+//       //   console.log(image)
+//       //   res.send(`Image is ${image}`)
+//       // }
+//     }
+//     else {
+//       res.status(400).send("Instance does not exist")
+//     }
+//   }
+//
+//   purchase()
+// });
+//
+//
+//
+// app.get('/previewed2', (req, res) => {
+//   const previewed = async () => {
+//     console.log("You said " + req.query.contract_address);
+//
+//     try {
+//       let inst = await Evidence.at(req.query.contract_address);
+//       console.log(inst);
+//
+//       var out = await inst.previewed.call();
+//       res.send(`Previewed is ${out}`);
+//     }
+//     catch(e) {
+//       res.status(400).send("Error: " + e);
+//     }
+//   };
+//
+//   previewed()
+// });
