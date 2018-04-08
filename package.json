@@ -8,9 +8,9 @@
   },
   "scripts": {
     "test": "mocha",
-    "start": "node app.js",
+    "start": "truffle migrate && node app.js",
 
-    "restart": "truffle migrate && node app.js"
+    "quickstart": "node app.js"
   },
   "author": "",
   "license": "ISC",

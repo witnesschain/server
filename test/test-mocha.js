@@ -25,12 +25,12 @@ describe('API', function() {
     // to specify when our test is completed, and that's what makes easy
     // to perform async test!
     describe("Preview", function(){
-      it("should let you preview correctly the first time", function(done){
+      it("lets you preview correctly the first time", function(done){
         request(baseURL)
           .post("/preview")
           .send()
           .end(function(err, res) {
-            console.log("hello");
+            // console.log("hello");
             if (err) {
               throw err;
             }
@@ -40,12 +40,12 @@ describe('API', function() {
           });
       });
 
-      it("should NOT let you preview again", function(done){
+      it("does NOT let you preview again", function(done){
         request(baseURL)
           .post("/preview")
           .send()
           .end(function(err, res) {
-            console.log("hello");
+            // console.log("hello");
             if (err) {
               throw err;
             }
@@ -54,43 +54,52 @@ describe('API', function() {
             done();
           });
       });
+
+      it("says previewed is true", function(done){
+        request(baseURL)
+          .get("/previewed")
+          .send()
+          .end(function(err, res) {
+            if (err) {
+              throw err;
+            }
+            res.status.should.equal(200);
+            res.text.should.equal("Previewed is true");
+            done();
+          });
+      });
     });
 
+    describe("Purchasing", function(){
+      it("lets you buy once", function(done){
+        request(baseURL)
+          .post("/purchase")
+          .send()
+          .end(function(err, res) {
+            // console.log("hello");
+            if (err) {
+              throw err;
+            }
+            res.status.should.equal(200);
+            res.text.should.equal("Success is true");
+            done();
+          });
+      });
+
+      it("does NOT let you buy again", function(done){
+        request(baseURL)
+          .post("/purchase")
+          .send()
+          .end(function(err, res) {
+            // console.log("hello");
+            if (err) {
+              throw err;
+            }
+            res.status.should.equal(200);
+            res.text.should.equal("Success is false");
+            done();
+          });
+      });
+    });
 
 });
-
-
-  // use describe to give a title to your test suite, in this case the tile is "Account"
-  // and then specify a function in which we are going to declare all the tests
-  // we want to run. Each test starts with the function it() and as a first argument
-  // we have to provide a meaningful title for it, whereas as the second argument we
-  // specify a function that takes a single parameter, "done", that we will use
-  // to specify when our test is completed, and that's what makes easy
-  // to perform async test!
-  // describe('Account', function() {
-  //   it('should return error trying to save duplicate username', function(done) {
-  //     var profile = {
-  //       username: 'vgheri',
-  //       password: 'test',
-  //       firstName: 'Valerio',
-  //       lastName: 'Gheri'
-  //     };
-  //   // once we have specified the info we want to send to the server via POST verb,
-  //   // we need to actually perform the action on the resource, in this case we want to
-  //   // POST on /api/profiles and we want to send some info
-  //   // We do this using the request object, requiring supertest!
-  //   // request(url)
-  //   // 	.post('/api/profiles')
-  //   // 	.send(profile)
-  //   //     // end handles the response
-  //   // 	.end(function(err, res) {
-  //   //           if (err) {
-  //   //             throw err;
-  //   //           }
-  //   //           // this is should.js syntax, very clear
-  //   //           res.should.have.status(400);
-  //   //           done();
-  //   //         });
-  // });
-// });
-// });
