@@ -14,6 +14,8 @@ contract Evidence {
 
   event Previewed(uint image);
   event Purchased(bool success);
+  
+  // ADD DATE TIME - https://github.com/pipermerriam/ethereum-datetime
 
   // modifier restricted() {
   //   if (msg.sender == owner) _;
