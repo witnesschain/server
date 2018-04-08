@@ -22,17 +22,17 @@ For production purposes, may need Geth instead of Ganache: https://hackernoon.co
 
 ## Getting started
 
-Download Ganache: `brew cask install ganache` or visit Ganache's website. Then start the test blockchain via Ganache by double-clicking the app icon.
+* Download Ganache from the website.
+* `npm install`
 
-Every time you change the contract, do `truffle compile`.
+## Running the server
 
-To start testing a contract on the test Ganache blockchain, do `truffle migrate`.
+* Double-click the Ganache icon to get it running.
+* `truffle migrate`
+* `npm start`
+* Then you can start running RESTful commands to interact with the blockchain via the API!
 
-## Running server
-
-First do `npm install`. To run make sure Ganache is running, then do `truffle migrate`, then `node index.js`.
-
-## Unit tests
+## Testing
 
 `truffle test`
 
