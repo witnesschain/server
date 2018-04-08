@@ -104,6 +104,9 @@ describe('API', function() {
 
 
     describe("New", function(){
+
+      let address = null;
+
       it("correctly creates a new contract", function(done){
         request(baseURL)
           .post("/new")
@@ -115,8 +118,17 @@ describe('API', function() {
             }
             res.status.should.equal(200);
             res.text.should.startWith("Your address is");
+
+            // extract just the raw address
+            address = res.text.substring("Your address is ".length)
+
             done();
           });
+      });
+
+      it("stuff", function(done){
+        console.log("!!" + address);
+        done();
       });
     });
 

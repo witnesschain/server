@@ -1,6 +1,5 @@
 // Express.js server file
 
-// Import libraries
 var Web3            = require('web3'),
     contract        = require("truffle-contract"),
     path            = require('path'),
@@ -30,6 +29,7 @@ app.listen(3000, () => console.log('Listening on port 3000'));
 
 // ROUTING
 
+// tester
 app.get('/hello', function (req, res) {
   res.send('Hello!!')
 });
@@ -163,4 +163,24 @@ app.get('/previewed', (req, res) => {
   catch (e) {
     res.status(400).send("Error: " + e)
   }
+});
+
+
+app.get('/previewed2', (req, res) => {
+  const previewed = async () => {
+    console.log("You said " + req.query.contract_address);
+
+    try {
+      let inst = await Evidence.at(req.query.contract_address);
+      console.log(inst);
+
+      var out = await inst.previewed.call();
+      res.send(`Previewed is ${out}`);
+    }
+    catch(e) {
+      res.status(400).send("Error: " + e);
+    }
+  };
+
+  previewed()
 });
