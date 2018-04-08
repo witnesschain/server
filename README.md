@@ -46,3 +46,21 @@ Use this mnemonic:
 ```
 candy maple cake sugar pudding cream honey rich smooth crumble sweet treat
 ```
+
+## Using the API
+
+See `test-mocha.js`, but for instance you can do:
+
+```
+  POST /new
+    in body:
+      image=12345
+      creator_address=0x123abc
+      receiver_address=0x456def
+    it will return the `address` of the created contract
+
+  GET /previewed
+    in body:
+      contract_address=0x333bbb
+    it will return a boolean `previewed` saying if the contract has been previewed 
+```
