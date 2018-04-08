@@ -66,6 +66,7 @@ app.post('/new', (req, res) => {
         // otherwise we run out of gas with this method
         console.log(newResult)
         const newContractAddress = newResult.contract.address
+        // TODO send back a JSON object
         res.send(`Your address is ${newContractAddress}`)
       }
       catch (e) {
@@ -160,32 +161,3 @@ app.get('/previewed', (req, res) => {
     res.status(400).send("Error: " + e)
   }
 });
-
-  //
-  // if (instance != null) {
-  //     instance.preview({from: '0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef'})
-  //       .then((result) => {
-  //           if()
-  //       });
-  // }
-// });
-
-//
-//     // return instance.bought.call({from: '0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef'});
-//     return instance.preview({from: '0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef'});
-// }).then(function(result) {
-//     // TODO this stops working after the first time because previewed is set to true
-//     // after the first run.
-//     // see https://github.com/trufflesuite/truffle-contract/tree/c1f33f05a6119a97b7adf51d44d8644396c2d598
-//     console.log(result);
-//     console.log(result.logs[0].args.image);
-//
-//     return instance.previewed.call({from: '0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef'});
-// }).then(function(result) {
-//     console.log(result);
-// }).catch(function(err){
-//   console.log("ERROR: " + err);
-// });
-// // .error(function(err){
-// //   console.log(err)
-// // });
