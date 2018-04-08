@@ -3,9 +3,10 @@
 var Web3            = require('web3'),
     contract        = require("truffle-contract"),
     path            = require('path'),
-    BigNumber       = require('bignumber.js');
+    BigNumber       = require('bignumber.js'),
     EvidenceJSON  = require(path.join(__dirname, 'build/contracts/Evidence.json')),
-    express       = require('express');
+    express       = require('express'),
+    bodyParser    = require('body-parser');
 
 // Set up Truffle stuff
 var provider = new Web3.providers.HttpProvider("http://localhost:7545");
@@ -26,6 +27,8 @@ var app = express();
 
 app.listen(3000, () => console.log('Listening on port 3000'));
 
+// to parse POST bodies
+app.use(bodyParser.json());
 
 // ROUTING
 
@@ -51,61 +54,83 @@ app.post('/dummy', (req, res) => {
   dummy();
 });
 
-app.post('/new', (req, res) => {
-    const makeNew = async() => {
-      // TODO read this in from the req object
-      var image = 5;
-      var lat = 4200000000;
-      var lon = -7300000000;
-      var price = "1000000000000000000"; // 1 ether, in wei
-      var desc = "hello";
-      var creator = "0xf17f52151EbEF6C7334FAD080c5704D77216b732";
-      var receiver = "0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef";
-      var violation_type = 1;
+app.post('/new', async (req, res) => {
+    // TODO read this in from the req object
+    var image = req.body.image;
+    var lat = 4200000000;
+    var lon = -7300000000;
+    var price = "1000000000000000000"; // 1 ether, in wei
+    var desc = "hello";
+    var creator = req.body.creator_address
+    var receiver = req.body.receiver_address
+    var violation_type = 1;
 
-      try {
-        const newResult = await Evidence.new(image, lat, lon, price, desc, creator, receiver, violation_type, {from: creator, gas: 6721975 })
-        // that gas limit is just the max that ganache offers, bit of a hack
-        // otherwise we run out of gas with this method
-        console.log(newResult)
-        const newContractAddress = newResult.contract.address
-        // TODO send back a JSON object
-        res.send(`Your address is ${newContractAddress}`)
-      }
-      catch (e) {
-        res.status(400).send("ERROR: " + e)
-      }
+    try {
+      const newResult = await Evidence.new(image, lat, lon, price, desc, creator, receiver, violation_type, {from: creator, gas: 6721975 })
+      // that gas limit is just the max that ganache offers, bit of a hack
+      // otherwise we run out of gas with this method
+      console.log(newResult)
+      const newContractAddress = newResult.contract.address
+
+      res.json({
+        success: true,
+        address: newContractAddress
+      })
     }
-
-    makeNew()
+    catch (e) {
+      res.status(400).send("ERROR: " + e)
+    }
 });
 
 // access with: http POST :3000/preview
-app.post('/preview', (req, res) => {
-  // run the preview function, then return what was previewed
-  const preview = async () => {
-    if (instance != null) {
-      console.log("hi")
-      const previewResult = await instance.preview({from: '0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef'})
-      console.log(previewResult)
-
-      if (previewResult.logs[0]) {
-        const image = previewResult.logs[0].args.image
-        console.log(image)
-        res.send(`Image is ${image}`)
-      }
-    }
-    else {
-      res.status(400).send("Instance does not exist")
-    }
-  }
-
+app.post('/preview', async (req, res) => {
   try {
-    preview()
+    let inst = await Evidence.at(req.body.contract_address)
+    console.log(inst)
+
+    let previewResult = await inst.preview({
+      from: req.body.receiver_address
+    })
+
+    console.log(previewResult)
+
+    if (previewResult.logs[0]) {
+      const image = previewResult.logs[0].args.image
+      console.log(image)
+      
+      res.json({
+        image: image
+      })
+    }
   }
-  catch (e) {
-    console.error("Error: " + e)
+  catch(e) {
+    res.status(400).send("Error: " + e);
   }
+
+  // // run the preview function, then return what was previewed
+  // const preview = async () => {
+  //   if (instance != null) {
+  //     console.log("hi")
+  //     const previewResult = await instance.preview({from: '0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef'})
+  //     console.log(previewResult)
+  //
+  //     if (previewResult.logs[0]) {
+  //       const image = previewResult.logs[0].args.image
+  //       console.log(image)
+  //       res.send(`Image is ${image}`)
+  //     }
+  //   }
+  //   else {
+  //     res.status(400).send("Instance does not exist")
+  //   }
+  // }
+  //
+  // try {
+  //   preview()
+  // }
+  // catch (e) {
+  //   console.error("Error: " + e)
+  // }
 });
 
 // access with: http POST :3000/purchase
