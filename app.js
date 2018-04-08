@@ -27,6 +27,9 @@ var app = express();
 
 app.listen(3000, () => console.log('Listening on port 3000'));
 
+
+// ROUTING
+
 app.get('/hello', function (req, res) {
   res.send('Hello!!')
 });
@@ -61,7 +64,7 @@ app.post('/new', (req, res) => {
       var violation_type = 1;
 
       try {
-        const newResult = await Evidence.new(image, lat, lon, price, desc, creator, receiver, violation_type, {from: '0xf17f52151EbEF6C7334FAD080c5704D77216b732', gas: 6721975 })
+        const newResult = await Evidence.new(image, lat, lon, price, desc, creator, receiver, violation_type, {from: creator, gas: 6721975 })
         // that gas limit is just the max that ganache offers, bit of a hack
         // otherwise we run out of gas with this method
         console.log(newResult)

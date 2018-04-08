@@ -102,4 +102,22 @@ describe('API', function() {
       });
     });
 
+
+    describe("New", function(){
+      it("correctly creates a new contract", function(done){
+        request(baseURL)
+          .post("/new")
+          .send()
+          .end(function(err, res) {
+            // console.log("hello");
+            if (err) {
+              throw err;
+            }
+            res.status.should.equal(200);
+            res.text.should.startWith("Your address is");
+            done();
+          });
+      });
+    });
+
 });
