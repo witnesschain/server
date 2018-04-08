@@ -62,5 +62,30 @@ See `test-mocha.js`, but for instance you can do:
   GET /previewed
     in body:
       contract_address=0x333bbb
-    it will return a boolean `previewed` saying if the contract has been previewed 
+    it will return a boolean `previewed` saying if the contract has been previewed
+```
+
+### Example
+
+If you're using `httpie` it looks like this:
+
+```
+  http POST :3000/new image=12345 creator_address=0xf17f52151EbEF6C7334FAD080c5704D77216b732 receiver_address=0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef
+```
+
+You will get the following response:
+
+```
+HTTP/1.1 200 OK
+Connection: keep-alive
+Content-Length: 71
+Content-Type: application/json; charset=utf-8
+Date: Sun, 08 Apr 2018 20:58:27 GMT
+ETag: W/"47-HZ8tao84xrCSIDw3Bti+pmg1r7Q"
+X-Powered-By: Express
+
+{
+    "address": "0x9e699d6c7ccf183f0b09675a9e867d1486eef85b",
+    "success": true
+}
 ```

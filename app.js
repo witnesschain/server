@@ -38,7 +38,7 @@ app.get('/hello', function (req, res) {
 });
 
 app.post('/new', async (req, res) => {
-    // TODO read this in from the req object
+    // TODO stop hardcoding, read all in from req
     var image = req.body.image;
     var lat = 4200000000;
     var lon = -7300000000;
