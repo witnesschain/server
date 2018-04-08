@@ -35,3 +35,11 @@ First do `npm install`. To run make sure Ganache is running, then do `truffle mi
 ## Unit tests
 
 `truffle test`
+
+## Ganache
+
+Use this mnemonic:
+
+```
+candy maple cake sugar pudding cream honey rich smooth crumble sweet treat
+```
