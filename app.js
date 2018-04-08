@@ -50,6 +50,7 @@ app.post('/dummy', (req, res) => {
 
 app.post('/new', (req, res) => {
     const makeNew = async() => {
+      // TODO read this in from the req object
       var image = 5;
       var lat = 4200000000;
       var lon = -7300000000;
@@ -59,17 +60,17 @@ app.post('/new', (req, res) => {
       var receiver = "0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef";
       var violation_type = 1;
 
-      // PROBLEM: having trouble with this. i always get "invalid address" error.r
-      // try {
+      try {
         const newResult = await Evidence.new(image, lat, lon, price, desc, creator, receiver, violation_type, {from: '0xf17f52151EbEF6C7334FAD080c5704D77216b732', gas: 6721975 })
         // that gas limit is just the max that ganache offers, bit of a hack
+        // otherwise we run out of gas with this method
         console.log(newResult)
         const newContractAddress = newResult.contract.address
         res.send(`Your address is ${newContractAddress}`)
-      // }
-      // catch (e) {
-      //   res.status(400).send("ERROR: " + e)
-      // }
+      }
+      catch (e) {
+        res.status(400).send("ERROR: " + e)
+      }
     }
 
     makeNew()
