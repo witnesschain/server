@@ -28,13 +28,18 @@ For production purposes, may need Geth instead of Ganache: https://hackernoon.co
 ## Running the server
 
 * Double-click the Ganache icon to get it running.
-* `truffle migrate`
-* `npm start`
+* `npm run restart`
 * Then you can start running RESTful commands to interact with the blockchain via the API!
 
 ## Testing
 
-`truffle test`
+To test raw contracts: `truffle test`
+
+Testing the API is a bit annoying. You have to:
+
+* Restart Ganache
+* `npm run restart`
+* `npm test`
 
 ## Ganache
 
