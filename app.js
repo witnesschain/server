@@ -69,7 +69,7 @@ app.post('/fancy_square', async (req, res) => {
 
 app.post('/new', async (req, res) => {
     // TODO stop hardcoding, read all in from req
-    var image = req.body.image;
+    var image = parseInt(req.body.image);
     var lat = 4200000000;
     var lon = -7300000000;
     var price = "1000000000000000000"; // 1 ether, in wei
