@@ -5,6 +5,19 @@ var request = require('supertest');
 // var winston = require('winston');
 // var config = require('./config-debug');
 
+
+describe('Dummy', function() {
+
+  it("should pass a trivial test", function(done){
+    if (3 === 3) {
+      done();
+    }
+    else {
+      throw new Error();
+    }
+  });
+});
+
 describe('API', function() {
     // look here for inspiration https://thewayofcode.wordpress.com/2013/04/21/how-to-build-and-test-rest-api-with-nodejs-express-mocha/
 
