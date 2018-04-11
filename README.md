@@ -39,7 +39,7 @@ For full testing, use `truffle test` (it calls both `TestEvidence.sol` and `test
 
 To test JUST the API (`test-mocha.js`), use `npm test`.
 
-Before you run tests, ensure the server is running!
+Before you run tests, ensure the server is running! (Run the tests and the server in separate terminal tabs.)
 
 ## Ganache
 
