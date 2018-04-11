@@ -46,7 +46,7 @@ app.get('/hello', function (req, res) {
 // simple squaring function, does NOT call solidity
 app.post('/basic_square', (req, res) => {
   let x = parseInt(req.body.x)
-  console.log("x is " + x)
+  // console.log("x is " + x)
   let xSquared = x * x
   res.send("Answer: " + xSquared)
 });
@@ -57,7 +57,7 @@ app.post('/fancy_square', async (req, res) => {
   console.log("x is " + x)
   try {
     const result = await sampleInstance.square.call(x)
-    console.log(result)
+    // console.log(result)
     // the `result` is a BigNumber, need to turn it into a normal number
     res.send("Answer: " + result.toNumber())
   }
@@ -85,8 +85,10 @@ app.post('/new', async (req, res) => {
       const newResult = await Evidence.new(image, lat, lon, price, desc, creator, receiver, violation_type, {from: creator, gas: 6721975 })
       // that gas limit is just the max that ganache offers, bit of a hack
       // otherwise we run out of gas with this method
-      console.log(newResult)
+      // console.log(newResult)
       const newContractAddress = newResult.contract.address
+
+      console.log(`New contract created at ${newContractAddress}`)
 
       res.json({
         success: true,
@@ -103,17 +105,17 @@ app.post('/new', async (req, res) => {
 app.post('/preview', async (req, res) => {
   try {
     let inst = await Evidence.at(req.body.contract_address)
-    console.log(inst)
+    // console.log(inst)
 
     let previewResult = await inst.preview({
       from: req.body.receiver_address
     })
 
-    console.log(previewResult)
+    // console.log(previewResult)
 
     if (previewResult.logs[0]) {
       const image = previewResult.logs[0].args.image
-      console.log(image)
+      // console.log("image is " + image)
 
       res.json({
         image: image
@@ -121,6 +123,7 @@ app.post('/preview', async (req, res) => {
     }
   }
   catch(e) {
+    console.log(e)
     res.status(400).send("Error: " + e);
   }
 });
@@ -136,6 +139,7 @@ app.get('/previewed', async (req, res) => {
     });
   }
   catch(e) {
+    console.log(e)
     res.status(400).send("Error: " + e);
   }
 });
@@ -148,16 +152,17 @@ app.post('/purchase', async (req, res) => {
       from: req.body.receiver_address,
       value: web3.toWei(req.body.money_amount + "", req.body.money_unit)
     })
-    console.log(purchaseResult)
+    // console.log(purchaseResult)
 
     const args = purchaseResult.logs[0].args
     const success = args.success
-    console.log(success)
+    console.log(`Purchase successful: ${success}`)
     res.json({
       success: success
     })
   }
   catch(e) {
+    console.log(e)
     res.status(400).send("Error: " + e)
   }
 });
