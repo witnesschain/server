@@ -14,7 +14,7 @@ contract Evidence {
 
   event Previewed(uint image);
   event Purchased(bool success);
-  
+
   // ADD DATE TIME - https://github.com/pipermerriam/ethereum-datetime
 
   // modifier restricted() {
@@ -44,12 +44,34 @@ contract Evidence {
 
   }
 
+  modifier onlyReceiver() {
+      // if a condition is not met then throw an exception
+      if (msg.sender != receiver) throw;
+      // or else just continue executing the function
+      _;
+  }
+
+  modifier onlyCreator() {
+      // if a condition is not met then throw an exception
+      if (msg.sender != creator) throw;
+      // or else just continue executing the function
+      _;
+  }
+
+  modifier onlyCreatorOrReceiver() {
+      // if a condition is not met then throw an exception
+      if (msg.sender != creator && msg.sender != receiver) throw;
+      // or else just continue executing the function
+      _;
+  }
+
+
   function dummy(uint x) public pure returns (uint) {
     uint x2 = x * x;
     return x2;
   }
 
-  function preview() public returns (uint _image) {
+  function preview() public onlyCreatorOrReceiver returns (uint _image) {
     if (bought == true){
       // if person checking is the receiver? Can we check that?
       _image = image;
@@ -70,7 +92,7 @@ contract Evidence {
     /* emit Previewed(_image); */
   }
 
-  function purchase() public payable returns (bool) {
+  function purchase() public payable onlyReceiver returns (bool) {
     // TODO for all these functions, ensure that the caller is
     // the receiver
     bool success = false;
@@ -97,20 +119,6 @@ contract Evidence {
     emit Purchased(success);
     return success;
   }
-
-  /* function square(uint x) public pure returns (uint) {
-    return x * x;
-  } */
-
-  /* function eatMoney() public payable returns (bool _success) {
-    // send 1 ether or else
-    require(msg.value >= 1 ether);
-
-    bought = true;
-
-    _success = true;
-
-  } */
 
   // fallback fn
   function() public payable { }

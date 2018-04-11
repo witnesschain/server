@@ -20,6 +20,7 @@ contract TestEvidence {
   uint violation_type = 1;
   Evidence evid = new Evidence(image, lat, lon, price, desc, creator, receiver, violation_type);
 
+  address wrongAddress = 0x5AEDA56215b167893e80B4fE645BA6d5Bab767DE;
 
   function testDumb() public {
     // just to make sure the testing suite works
@@ -59,7 +60,6 @@ contract TestEvidence {
     bool bought = evid.bought();
     Assert.equal(out, false, "Payment should not succeed");
     Assert.equal(bought, false, "Not bought");
-
     uint256 creatorBalanceNoTxn = creator.balance;
     uint256 ourBalanceNoTxn = self.balance;
     Assert.equal(creatorBalanceBefore, creatorBalanceNoTxn, "Creator should not be paid");
@@ -68,10 +68,8 @@ contract TestEvidence {
     // now pay the proper amount
     out = evid.purchase.value(3 ether)();
     Assert.equal(out, true, "Should be enough money for payment to succeed");
-
     bought = evid.bought();
     Assert.equal(bought, true, "Bought is true");
-
     uint imageOut = evid.preview();
     Assert.equal(image, imageOut, "Preview should return original image");
 

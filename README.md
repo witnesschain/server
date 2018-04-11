@@ -23,6 +23,7 @@ For production purposes, may need Geth instead of Ganache: https://hackernoon.co
 ## Getting started
 
 * Download Ganache from its website.
+* `npm install -g truffle`
 * `npm install`
 * If you have a `build` folder, do `rm -rf build`. (This is where contracts are compiled into.)
 * `truffle compile`
@@ -30,10 +31,10 @@ For production purposes, may need Geth instead of Ganache: https://hackernoon.co
 ## Running the server
 
 * Double-click the Ganache icon to get it running.
-* `npm restart`
+* `npm start`
 * Then you can start running RESTful commands to interact with the blockchain via the API!
 
-Any time you change the server code and want to restart, do `npm restart`.
+Any time you change the server code and want to restart, do `npm quickstart`.
 
 ## Testing
 
@@ -41,7 +42,9 @@ For full testing, use `truffle test` (it calls both `TestEvidence.sol` and `test
 
 To test JUST the API (`test-mocha.js`), use `npm test`.
 
-Before you run tests, ensure the server is running! (Run the tests, `truffle test`, and the server, `npm restart`, in separate terminal tabs.)
+Before you run tests, ensure the server is running! (Run the tests, `truffle test`, and the server, `npm start`, in separate terminal tabs.)
+
+For some reason, `npm test` is more reliable than `truffle test`. So prefer `npm test` when testing the API.
 
 ## Ganache
 
@@ -49,6 +52,14 @@ Use this mnemonic:
 
 ```
 candy maple cake sugar pudding cream honey rich smooth crumble sweet treat
+```
+
+Make sure there are no spaces at the start or end of this string!!!
+
+Your first address should be:
+
+```
+0x627306090abaB3A6e1400e9345bC60c78a8BEf57
 ```
 
 ## Using the API

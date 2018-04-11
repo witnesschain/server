@@ -159,6 +159,27 @@ describe('API', function() {
           });
       });
 
+      it("should NOT let the wrong person buy", function(done){
+        const WRONG_ADDRESS = 0x5AEDA56215b167893e80B4fE645BA6d5Bab767DE;
+
+        request(baseURL)
+          .post("/purchase")
+          .send({
+            contract_address: contractAddress,
+            receiver_address: WRONG_ADDRESS,
+            money_amount: 2,
+            money_unit: "ether"
+          })
+          .expect(400).
+          end(function(err, res) {
+            if (err) {
+              throw err
+            }
+
+            done()
+          });
+      });
+
       it("should let you buy with sufficient funds", function(done) {
         request(baseURL)
           .post("/purchase")
@@ -178,6 +199,7 @@ describe('API', function() {
             done()
           });
       });
+
 
       it("should NOT let you buy again", function(done) {
         request(baseURL)
