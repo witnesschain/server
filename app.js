@@ -3,10 +3,12 @@
 var Web3            = require('web3'),
     contract        = require("truffle-contract"),
     path            = require('path'),
+    ip              = require('ip'),
     BigNumber       = require('bignumber.js'),
-    EvidenceJSON  = require(path.join(__dirname, 'build/contracts/Evidence.json')),
-    express       = require('express'),
-    bodyParser    = require('body-parser');
+    EvidenceJSON    = require(path.join(__dirname, 'build/contracts/Evidence.json')),
+    express         = require('express'),
+    bodyParser      = require('body-parser'),
+    utils           = require('./src/utils.js');
 
 // Set up Truffle stuff
 var provider = new Web3.providers.HttpProvider("http://localhost:7545");
@@ -25,7 +27,11 @@ Evidence.deployed().then(function(_instance) {
 // set up express
 var app = express();
 
-app.listen(3000, () => console.log('Listening on port 3000'));
+// we want it broadcasting on our local IP address
+let serverIPAddress = utils.getServerAddress()
+let serverPort = utils.getServerPort()
+let serverURL = utils.getServerURL()
+app.listen(serverPort, serverIPAddress, () => console.log(`Listening on ${serverURL}`));
 
 // to parse POST bodies
 app.use(bodyParser.json());

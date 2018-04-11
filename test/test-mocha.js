@@ -1,12 +1,15 @@
 var should = require('should');
 var assert = require('assert');
 var request = require('supertest');
+var utils = require('./src/utils.js');
+
 // var mongoose = require('mongoose');
 // var winston = require('winston');
 // var config = require('./config-debug');
 
-
-const baseURL = 'http://localhost:3000';
+// connect to server
+const baseURL = utils.getServerURL()
+console.log(`Testing at ${baseURL}`);
 
 
 describe('Dummy', function() {
