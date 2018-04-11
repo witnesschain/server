@@ -35,11 +35,9 @@ Any time you change the server code and want to restart, do `npm restart`.
 
 ## Testing
 
-`truffle test` (it calls both `TestEvidence.sol` and `test-mocha.js`)
+For full testing, use `truffle test` (it calls both `TestEvidence.sol` and `test-mocha.js`).
 
-<!-- To test raw contracts: `truffle test`
-
-Testing the API: `npm test` -->
+To test JUST the API (`test-mocha.js`), use `npm test`.
 
 ## Ganache
 
