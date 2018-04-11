@@ -3,14 +3,14 @@ pragma solidity ^0.4.21;
 contract Evidence {
   address public creator;
   address public receiver;
-  int latitude; //assume 8 decimal points. `int` == `int256` so we will have tons of storage.
-  int longitude; //assume 8 decimal points
+  int public latitude; //assume 6 decimal points. `int` == `int256` so we will have tons of storage.
+  int public longitude; //assume 6 decimal points
   bytes32 image;
-  bytes32 description;
-  uint violation_type;
+  bytes32 public description;
+  uint public violation_type;
   bool public bought;
   bool public previewed;
-  uint price; //in Wei
+  uint public price; //in Wei
 
   event Previewed(string image);
   event Purchased(bool success);
@@ -124,8 +124,13 @@ contract Evidence {
   function() public payable { }
 
 
+  function getDescription() public returns (string) {
+    return bytes32ToString(description);
+  }
+
+
   // convert bytes32 to string
-  // TODO: problem where string has a lot of dumb 0 characters at the end 
+  // TODO: problem where string has a lot of dumb 0 characters at the end
   function bytes32ToString (bytes32 data) public pure returns (string) {
       bytes memory bytesString = new bytes(32);
       for (uint j=0; j<32; j++) {

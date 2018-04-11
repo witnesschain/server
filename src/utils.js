@@ -11,3 +11,9 @@ exports.getServerPort = () => IP_PORT
   formatted as a URL.
 */
 exports.getServerURL = () => `http://${IP_ADDRESS}:${IP_PORT}`
+
+/*
+  Converts a string gotten from Solidity - which may have trailing \u0000's -
+  into a nice normal string.
+*/
+exports.cleanSolidityString = (str) => str.replace(/\0[\s\S]*$/g,'')

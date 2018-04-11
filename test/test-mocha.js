@@ -47,6 +47,11 @@ describe('API', function() {
     const IMAGE = "harvard.edu";
     const CREATOR_ADDRESS = '0xf17f52151EbEF6C7334FAD080c5704D77216b732';
     const RECEIVER_ADDRESS = '0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef';
+    const LATITUDE = 42000000
+    const LONGITUDE = -73000000
+    const PRICE = "1000000000000000000" // 1 ether, in wei
+    const DESCRIPTION = "My Description!"
+    const VIOLATION_TYPE = 1
 
     // we'll use a single consistent contract address for testing
     let contractAddress = null;
@@ -59,7 +64,12 @@ describe('API', function() {
           .send({
             image: IMAGE,
             creator_address: CREATOR_ADDRESS,
-            receiver_address: RECEIVER_ADDRESS
+            receiver_address: RECEIVER_ADDRESS,
+            latitude: LATITUDE,
+            longitude: LONGITUDE,
+            price: PRICE,
+            description: DESCRIPTION,
+            violation_type: VIOLATION_TYPE
           })
           .expect(200)
           .end(function(err, res) {
@@ -226,4 +236,42 @@ describe('API', function() {
           });
       });
     });
+
+    describe("Getting Public Data", () => {
+        it("should gather the right public data", (done) => {
+          request(baseURL)
+            .get("/public_data")
+            .query({
+              contract_address: contractAddress
+            })
+            .expect(200)
+            .end(function(err, res) {
+              if (err) {
+                throw err
+              }
+
+              // address comparison
+              // these strings are not always cased properly. sometimes
+              // addresses get downcased somewhere along the way, but they're
+              // still the same.
+              res.body.creator.toLowerCase().should.equal(CREATOR_ADDRESS.toLowerCase())
+              res.body.receiver.toLowerCase().should.equal(RECEIVER_ADDRESS.toLowerCase())
+
+              // int comparison
+              parseInt(res.body.latitude).should.equal(LATITUDE)
+              parseInt(res.body.longitude).should.equal(LONGITUDE)
+              parseInt(res.body.violation_type).should.equal(VIOLATION_TYPE)
+
+              // string comparison
+              res.body.description.should.equal(DESCRIPTION)
+              res.body.price.should.equal(PRICE)
+
+              // boolean comparison
+              res.body.bought.should.equal(true)
+              res.body.previewed.should.equal(true)
+
+              done()
+            })
+        })
+    })
 });
