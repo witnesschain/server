@@ -112,7 +112,6 @@ contract Evidence {
       success = false;
     }
 
-
     // refund any extra $$$ sent to this contract
     address self = this;
     msg.sender.transfer(self.balance);
@@ -126,6 +125,7 @@ contract Evidence {
 
 
   // convert bytes32 to string
+  // TODO: problem where string has a lot of dumb 0 characters at the end 
   function bytes32ToString (bytes32 data) public pure returns (string) {
       bytes memory bytesString = new bytes(32);
       for (uint j=0; j<32; j++) {
