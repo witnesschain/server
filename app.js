@@ -32,15 +32,28 @@ app.use(bodyParser.json());
 
 // ROUTING
 
-// tester ones
+// tester endpoints
 app.get('/hello', function (req, res) {
   res.send('Hello!')
 });
 
+// simple squaring function, does NOT call solidity
 app.post('/basic_square', function(req, res) {
-  let x = req.body.x
+  let x = parseInt(req.body.x)
   let xSquared = x * x
   res.send("Answer: " + xSquared)
+});
+
+// cool squaring function, DOES call solidity
+app.post('/fancy_square', function(req, res) {
+  let x = parseInt(req.body.x)
+  try {
+    const xSquared = await Evidence.square(x)
+    res.send("Answer: " + xSquared)
+  }
+  catch (e) {
+    res.status(400).send("ERROR: " + e)
+  }
 });
 
 

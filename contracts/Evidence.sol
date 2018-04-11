@@ -65,8 +65,8 @@ contract Evidence {
       _;
   }
 
-
-  function dummy(uint x) public pure returns (uint) {
+  // dummy function 
+  function square(uint x) public pure returns (uint) {
     uint x2 = x * x;
     return x2;
   }
