@@ -23,6 +23,7 @@ For production purposes, may need Geth instead of Ganache: https://hackernoon.co
 ## Getting started
 
 * Download Ganache from its website.
+* `npm install -g truffle`
 * `npm install`
 * If you have a `build` folder, do `rm -rf build`. (This is where contracts are compiled into.)
 * `truffle compile`
@@ -52,6 +53,8 @@ Use this mnemonic:
 ```
 candy maple cake sugar pudding cream honey rich smooth crumble sweet treat
 ```
+
+Make sure there are no spaces at the start or end of this string!!!
 
 ## Using the API
 
