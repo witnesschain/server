@@ -1,16 +1,14 @@
 var should = require('should');
 var assert = require('assert');
 var request = require('supertest');
-var ip = require('ip');
+var utils = require('./src/utils.js');
+
 // var mongoose = require('mongoose');
 // var winston = require('winston');
 // var config = require('./config-debug');
 
 // connect to server
-const ipAddress = ip.address();
-const port = 3000;
-const baseURL = `http://${ipAddress}:${port}`;
-
+const baseURL = utils.getServerURL()
 console.log(`Testing at ${baseURL}`);
 
 
