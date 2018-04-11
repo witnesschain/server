@@ -24,6 +24,8 @@ For production purposes, may need Geth instead of Ganache: https://hackernoon.co
 
 * Download Ganache from the website.
 * `npm install`
+* If you have a `build` folder, do `rm -rf build`. (This is where contracts are compiled into.)
+* `truffle compile`
 
 ## Running the server
 
