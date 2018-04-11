@@ -1,7 +1,7 @@
 var should = require('should');
 var assert = require('assert');
 var request = require('supertest');
-var utils = require('./src/utils.js');
+var utils = require('../src/utils.js');
 
 // var mongoose = require('mongoose');
 // var winston = require('winston');
