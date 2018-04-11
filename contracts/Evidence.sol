@@ -46,27 +46,27 @@ contract Evidence {
 
   modifier onlyReceiver() {
       // if a condition is not met then throw an exception
-      if (msg.sender != receiver) throw;
+      if (msg.sender != receiver) revert();
       // or else just continue executing the function
       _;
   }
 
   modifier onlyCreator() {
       // if a condition is not met then throw an exception
-      if (msg.sender != creator) throw;
+      if (msg.sender != creator) revert();
       // or else just continue executing the function
       _;
   }
 
   modifier onlyCreatorOrReceiver() {
       // if a condition is not met then throw an exception
-      if (msg.sender != creator && msg.sender != receiver) throw;
+      if (msg.sender != creator && msg.sender != receiver) revert();
       // or else just continue executing the function
       _;
   }
 
-  // dummy function 
-  function square(uint x) public pure returns (uint) {
+  // dummy function
+  function square(uint x) public returns (uint) {
     uint x2 = x * x;
     return x2;
   }
