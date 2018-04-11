@@ -36,6 +36,14 @@ app.listen(serverPort, serverIPAddress, () => console.log(`Listening on ${server
 // to parse POST bodies
 app.use(bodyParser.json());
 
+
+
+// Global state
+// list of all evidence contracts that have been created
+let allContracts = []
+
+
+
 // ROUTING
 
 // tester endpoints
@@ -68,7 +76,6 @@ app.post('/fancy_square', async (req, res) => {
 
 
 app.post('/new', async (req, res) => {
-    // TODO stop hardcoding, read all in from req
     var image = req.body.image
     var lat = req.body.latitude
     var lon = req.body.longitude
@@ -78,17 +85,29 @@ app.post('/new', async (req, res) => {
     var receiver = req.body.receiver_address
     var violation_type = req.body.violation_type
 
-    console.log("Body is")
-    console.log(req.body)
+    // console.log("Body is")
+    // console.log(req.body)
 
     try {
       const newResult = await Evidence.new(image, lat, lon, price, desc, creator, receiver, violation_type, {from: creator, gas: 6721975 })
       // that gas limit is just the max that ganache offers, bit of a hack
       // otherwise we run out of gas with this method
       // console.log(newResult)
-      const newContractAddress = newResult.contract.address
+      const newContract = newResult.contract
+      const newContractAddress = newContract.address
 
       console.log(`New contract created at ${newContractAddress}`)
+
+      // store that we have created this contract
+      // store some basic information about the contract here
+      // some stuff should be dynamically retrieved such as previewed
+      // and bought, but key stuff that we need to filter on (like creator and
+      // receiver) should be here
+      allContracts.push({
+        address: newContractAddress,
+        creator: creator,
+        receiver: receiver
+      })
 
       res.json({
         success: true,
@@ -96,7 +115,7 @@ app.post('/new', async (req, res) => {
       })
     }
     catch (e) {
-      console.log("ERROR: " + e)
+      // console.log("ERROR: " + e)
       res.status(400).send("ERROR: " + e)
     }
 });
@@ -111,14 +130,14 @@ app.post('/preview', async (req, res) => {
       from: req.body.receiver_address
     })
 
-    console.log(previewResult)
+    // console.log(previewResult)
 
     if (previewResult.logs[0]) {
       const image = previewResult.logs[0].args.image
       // this image string may have lots of stupid trailing null chars (\u0000)
       // so trim them
       const cleanedImage = utils.cleanSolidityString(image)
-      console.log("image is " + cleanedImage)
+      // console.log("image is " + cleanedImage)
 
       res.json({
         image: cleanedImage
@@ -126,13 +145,13 @@ app.post('/preview', async (req, res) => {
     }
   }
   catch(e) {
-    console.log(e)
+    // console.log(e)
     res.status(400).send("Error: " + e);
   }
 });
 
 app.get('/previewed', async (req, res) => {
-  console.log("you said " + req.query.contract_address);
+  // console.log("you said " + req.query.contract_address);
   try {
     let inst = await Evidence.at(req.query.contract_address);
 
@@ -142,7 +161,7 @@ app.get('/previewed', async (req, res) => {
     });
   }
   catch(e) {
-    console.log(e)
+    // console.log(e)
     res.status(400).send("Error: " + e);
   }
 });
@@ -165,14 +184,14 @@ app.post('/purchase', async (req, res) => {
     })
   }
   catch(e) {
-    console.log(e)
+    // console.log(e)
     res.status(400).send("Error: " + e)
   }
 });
 
 // get public data about a contract
 app.get('/public_data', async (req, res) => {
-  console.log("you said " + req.query.contract_address)
+  // console.log("you said " + req.query.contract_address)
   try {
     let inst = await Evidence.at(req.query.contract_address)
 
@@ -192,12 +211,21 @@ app.get('/public_data', async (req, res) => {
       bought: await inst.bought.call(),
       previewed: await inst.previewed.call()
     }
-    console.log(result)
+    // console.log(result)
 
     res.json(result)
   }
   catch(e) {
-    console.log(e)
+    // console.log(e)
     res.status(400).send("Error: " + e)
   }
+})
+
+/**
+  Just returns the list of all contacts that we have been storing
+*/
+app.get('/list_contracts', async (req, res) => {
+  console.log("All created contracts: ")
+  console.log(allContracts)
+  res.json(allContracts)
 })

@@ -12,6 +12,7 @@ const baseURL = utils.getServerURL()
 console.log(`Testing at ${baseURL}`);
 
 
+
 describe('Dummy', function() {
 
   it("should pass a trivial test", function(done){
@@ -43,34 +44,46 @@ describe('Dummy', function() {
 describe('API', function() {
     // look here for inspiration https://thewayofcode.wordpress.com/2013/04/21/how-to-build-and-test-rest-api-with-nodejs-express-mocha/
 
-    // params for the contract
-    const IMAGE = "harvard.edu";
-    const CREATOR_ADDRESS = '0xf17f52151EbEF6C7334FAD080c5704D77216b732';
-    const RECEIVER_ADDRESS = '0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef';
+
+    /* VARIABLES */
+    // params for the contracts
+    const IMAGE = "harvard.edu"
+    const CREATOR_ADDRESS = '0xf17f52151EbEF6C7334FAD080c5704D77216b732'
+    const RECEIVER_ADDRESS = '0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef'
     const LATITUDE = 42000000
     const LONGITUDE = -73000000
     const PRICE = "1000000000000000000" // 1 ether, in wei
     const DESCRIPTION = "My Description!"
     const VIOLATION_TYPE = 1
 
+
+    // convenience functions
+    let createContract = () => {
+      // makes a POST request to make a new contract
+      // and returns an object you can call end(), expect(), etc on.
+      return request(baseURL)
+        .post("/new")
+        .send({
+          image: IMAGE,
+          creator_address: CREATOR_ADDRESS,
+          receiver_address: RECEIVER_ADDRESS,
+          latitude: LATITUDE,
+          longitude: LONGITUDE,
+          price: PRICE,
+          description: DESCRIPTION,
+          violation_type: VIOLATION_TYPE
+        })
+    }
+
     // we'll use a single consistent contract address for testing
+    // that is, we'll first create a brand-new contract, store its address here,
+    // then use that contract for all future tests (except trivial ones)
     let contractAddress = null;
 
     // begin by creating a new contract to test with
     describe("New", function(){
       it("should create a new contract", function(done){
-        request(baseURL)
-          .post("/new")
-          .send({
-            image: IMAGE,
-            creator_address: CREATOR_ADDRESS,
-            receiver_address: RECEIVER_ADDRESS,
-            latitude: LATITUDE,
-            longitude: LONGITUDE,
-            price: PRICE,
-            description: DESCRIPTION,
-            violation_type: VIOLATION_TYPE
-          })
+        createContract()
           .expect(200)
           .end(function(err, res) {
             // console.log("hello");
@@ -186,7 +199,6 @@ describe('API', function() {
           })
           .expect(400)
           .end(function(err, res) {
-            // console.log("YOU SHOULD SEE AN ERROR HERE:")
             if (err) {
               throw err
             }
@@ -238,40 +250,91 @@ describe('API', function() {
     });
 
     describe("Getting Public Data", () => {
-        it("should gather the right public data", (done) => {
-          request(baseURL)
-            .get("/public_data")
-            .query({
-              contract_address: contractAddress
-            })
-            .expect(200)
-            .end(function(err, res) {
-              if (err) {
-                throw err
-              }
 
-              // address comparison
-              // these strings are not always cased properly. sometimes
-              // addresses get downcased somewhere along the way, but they're
-              // still the same.
-              res.body.creator.toLowerCase().should.equal(CREATOR_ADDRESS.toLowerCase())
-              res.body.receiver.toLowerCase().should.equal(RECEIVER_ADDRESS.toLowerCase())
+      it("should gather the right public data", (done) => {
+        request(baseURL)
+          .get("/public_data")
+          .query({
+            contract_address: contractAddress
+          })
+          .expect(200)
+          .end(function(err, res) {
+            if (err) {
+              throw err
+            }
 
-              // int comparison
-              parseInt(res.body.latitude).should.equal(LATITUDE)
-              parseInt(res.body.longitude).should.equal(LONGITUDE)
-              parseInt(res.body.violation_type).should.equal(VIOLATION_TYPE)
+            // address comparison
+            // these strings are not always cased properly. sometimes
+            // addresses get downcased somewhere along the way, but they're
+            // still the same.
+            res.body.creator.toLowerCase().should.equal(CREATOR_ADDRESS.toLowerCase())
+            res.body.receiver.toLowerCase().should.equal(RECEIVER_ADDRESS.toLowerCase())
 
-              // string comparison
-              res.body.description.should.equal(DESCRIPTION)
-              res.body.price.should.equal(PRICE)
+            // int comparison
+            parseInt(res.body.latitude).should.equal(LATITUDE)
+            parseInt(res.body.longitude).should.equal(LONGITUDE)
+            parseInt(res.body.violation_type).should.equal(VIOLATION_TYPE)
 
-              // boolean comparison
-              res.body.bought.should.equal(true)
-              res.body.previewed.should.equal(true)
+            // string comparison
+            res.body.description.should.equal(DESCRIPTION)
+            res.body.price.should.equal(PRICE)
 
-              done()
-            })
-        })
+            // boolean comparison
+            res.body.bought.should.equal(true)
+            res.body.previewed.should.equal(true)
+
+            done()
+          })
+      })
+
+      // we'll make a second address so we can test the global listing property
+      let secondContractAddress = null
+
+      it("should create a second test contract properly", (done) => {
+        // so now we should have a list of 2 contracts
+        createContract()
+          .expect(200)
+          .end(function(err, res) {
+            // console.log("hello");
+            if (err) {
+              throw err;
+            }
+
+            // deconstruct json response
+            let success = res.body.success;
+            success.should.equal(true);
+
+            secondContractAddress = res.body.address;
+            secondContractAddress.should.startWith("0x");
+
+            done();
+          });
+      })
+
+      it("should list both created contracts", (done) => {
+        request(baseURL)
+          .get("/list_contracts")
+          .query()
+          .expect(200)
+          .end(function(err, res) {
+            if (err) {
+              throw err
+            }
+
+            let returnedList = res.body
+
+            // this should contain contract 1's address and also contract 2's address
+            returnedList[0].address.should.equal(contractAddress)
+            returnedList[1].address.should.equal(secondContractAddress)
+
+            // it should also name the right creators and receivers
+            returnedList[0].receiver.should.equal(RECEIVER_ADDRESS)
+            returnedList[0].creator.should.equal(CREATOR_ADDRESS)
+            returnedList[1].receiver.should.equal(RECEIVER_ADDRESS)
+            returnedList[1].creator.should.equal(CREATOR_ADDRESS)
+
+            done()
+          })
+      })
     })
 });
