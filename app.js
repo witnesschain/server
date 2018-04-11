@@ -38,14 +38,14 @@ app.get('/hello', function (req, res) {
 });
 
 // simple squaring function, does NOT call solidity
-app.post('/basic_square', function(req, res) {
+app.post('/basic_square', (req, res) => {
   let x = parseInt(req.body.x)
   let xSquared = x * x
   res.send("Answer: " + xSquared)
 });
 
 // cool squaring function, DOES call solidity
-app.post('/fancy_square', function(req, res) {
+app.post('/fancy_square', async (req, res) => {
   let x = parseInt(req.body.x)
   try {
     const xSquared = await Evidence.square(x)
