@@ -67,13 +67,13 @@ See `test-mocha.js`, but for instance you can do:
 
 ### Example
 
-If you're using `httpie` it looks like this:
+If you're using `httpie` the request (run at the command line) looks like this:
 
 ```
   http POST :3000/new image=12345 creator_address=0xf17f52151EbEF6C7334FAD080c5704D77216b732 receiver_address=0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef
 ```
 
-You will get the following response:
+You will get a response like this:
 
 ```
 HTTP/1.1 200 OK
