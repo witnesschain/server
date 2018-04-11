@@ -61,6 +61,7 @@ app.post('/new', async (req, res) => {
       })
     }
     catch (e) {
+      console.log("ERROR: " + e)
       res.status(400).send("ERROR: " + e)
     }
 });
