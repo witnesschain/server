@@ -34,7 +34,7 @@ app.use(bodyParser.json());
 
 // tester
 app.get('/hello', function (req, res) {
-  res.send('Hello!!')
+  res.send('Hello!')
 });
 
 app.post('/new', async (req, res) => {

@@ -6,6 +6,9 @@ var request = require('supertest');
 // var config = require('./config-debug');
 
 
+const baseURL = 'http://localhost:3000';
+
+
 describe('Dummy', function() {
 
   it("should pass a trivial test", function(done){
@@ -16,12 +19,26 @@ describe('Dummy', function() {
       throw new Error();
     }
   });
+
+  it("should access API dummy function properly", function(done){
+    request(baseURL)
+      .get("/hello")
+      .expect(200)
+      .end(function(err, res) {
+        // console.log("hello");
+        if (err) {
+          throw err;
+        }
+
+        res.text.should.equal("Hello!");
+
+        done();
+      });
+  });
 });
 
 describe('API', function() {
     // look here for inspiration https://thewayofcode.wordpress.com/2013/04/21/how-to-build-and-test-rest-api-with-nodejs-express-mocha/
-
-    const baseURL = 'http://localhost:3000';
 
     // params for the contract
     const IMAGE = 1636;
