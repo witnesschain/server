@@ -111,14 +111,17 @@ app.post('/preview', async (req, res) => {
       from: req.body.receiver_address
     })
 
-    // console.log(previewResult)
+    console.log(previewResult)
 
     if (previewResult.logs[0]) {
       const image = previewResult.logs[0].args.image
-      console.log("image is " + image)
+      // this image string may have lots of stupid trailing null chars (\u0000)
+      // so trim them
+      const cleanedImage = image.replace(/\0[\s\S]*$/g,'')
+      console.log("image is " + cleanedImage)
 
       res.json({
-        image: image
+        image: cleanedImage
       })
     }
   }

@@ -96,7 +96,7 @@ describe('API', function() {
             }
 
             // JSON gives us back the image int as a string, so parse it
-            parseInt(res.body.image).should.equal(IMAGE);
+            res.body.image.should.equal(IMAGE);
             done();
           });
       });
@@ -117,7 +117,7 @@ describe('API', function() {
 
             // "0" is the error code
             // TODO have the contract throw an error instead of returning 03
-            parseInt(res.body.image).should.equal("0");
+            res.body.image.should.equal("0");
             done();
           });
       });
@@ -174,8 +174,9 @@ describe('API', function() {
             money_amount: 2,
             money_unit: "ether"
           })
-          .expect(400).
-          end(function(err, res) {
+          .expect(400)
+          .end(function(err, res) {
+            // console.log("YOU SHOULD SEE AN ERROR HERE:")
             if (err) {
               throw err
             }

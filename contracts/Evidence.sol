@@ -12,7 +12,7 @@ contract Evidence {
   bool public previewed;
   uint price; //in Wei
 
-  event Previewed(bytes32 image);
+  event Previewed(string image);
   event Purchased(bool success);
 
   // ADD DATE TIME - https://github.com/pipermerriam/ethereum-datetime
@@ -76,21 +76,20 @@ contract Evidence {
     if (bought == true){
       // if person checking is the receiver? Can we check that?
       _image = image;
-      emit Previewed(_image);
     } else {
       if (previewed == false){
         previewed = true;
         _image = image;
-        emit Previewed(_image);
       } else {
         _image = "0";
-        emit Previewed(_image);
       }
     }
 
     // you can't send return values for a transaction,
     // so we should raise an event instead
-    /* emit Previewed(_image); */
+    // also, humans can't read bytes32 (you get some hex junk),
+    // so convert to strings before sending stuff back
+    emit Previewed(bytes32ToString(_image));
   }
 
   function purchase() public payable onlyReceiver returns (bool) {
@@ -123,5 +122,20 @@ contract Evidence {
 
   // fallback fn
   function() public payable { }
+
+
+  // convert bytes32 to string
+  function bytes32ToString (bytes32 data) public pure returns (string) {
+      bytes memory bytesString = new bytes(32);
+      for (uint j=0; j<32; j++) {
+          byte char = byte(bytes32(uint(data) * 2 ** (8 * j)));
+          if (char != 0) {
+              bytesString[j] = char;
+          }
+      }
+      return string(bytesString);
+  }
+
+
 
 }
