@@ -43,6 +43,8 @@ To test JUST the API (`test-mocha.js`), use `npm test`.
 
 Before you run tests, ensure the server is running! (Run the tests, `truffle test`, and the server, `npm restart`, in separate terminal tabs.)
 
+For some reason, `npm test` is more reliable than `truffle test`. So prefer `npm test` when testing the API.
+
 ## Ganache
 
 Use this mnemonic:
