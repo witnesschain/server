@@ -20,8 +20,6 @@ contract TestEvidence {
   uint violation_type = 1;
   Evidence evid = new Evidence(image, lat, lon, price, desc, creator, receiver, violation_type);
 
-  address wrongAddress = 0x5AEDA56215b167893e80B4fE645BA6d5Bab767DE;
-
   function testDumb() public {
     // just to make sure the testing suite works
     uint a = 5;
