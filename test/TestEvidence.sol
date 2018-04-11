@@ -10,11 +10,11 @@ contract TestEvidence {
 
   Evidence evidence = Evidence(DeployedAddresses.Evidence());
 
-  uint image = 5;
+  bytes32 image = "harvard.edu";
   int lat = 4200000000;
   int lon = -7300000000;
   uint price = 1 ether;
-  string desc = "hello";
+  bytes32 desc = "hello";
   address creator = 0xf17f52151EbEF6C7334FAD080c5704D77216b732;
   address receiver = this;
   uint violation_type = 1;
@@ -32,7 +32,7 @@ contract TestEvidence {
 
   function testPreview() public {
     // ensure we get the right image out in preview
-    uint imageOut = evid.preview();
+    bytes32 imageOut = evid.preview();
     Assert.equal(image, imageOut, "Preview should return original image");
 
     // ensure the preview thing is set properly
@@ -42,7 +42,7 @@ contract TestEvidence {
     // preview twice
 
     imageOut = evid.preview();
-    Assert.equal(0, imageOut, "Should not be able to preview twice");
+    Assert.equal("0", imageOut, "Should not be able to preview twice");
 
   }
 
@@ -68,7 +68,7 @@ contract TestEvidence {
     Assert.equal(out, true, "Should be enough money for payment to succeed");
     bought = evid.bought();
     Assert.equal(bought, true, "Bought is true");
-    uint imageOut = evid.preview();
+    bytes32 imageOut = evid.preview();
     Assert.equal(image, imageOut, "Preview should return original image");
 
     uint256 creatorBalanceAfter = creator.balance;

@@ -69,7 +69,7 @@ app.post('/fancy_square', async (req, res) => {
 
 app.post('/new', async (req, res) => {
     // TODO stop hardcoding, read all in from req
-    var image = parseInt(req.body.image);
+    var image = req.body.image;
     var lat = 4200000000;
     var lon = -7300000000;
     var price = "1000000000000000000"; // 1 ether, in wei
@@ -115,7 +115,7 @@ app.post('/preview', async (req, res) => {
 
     if (previewResult.logs[0]) {
       const image = previewResult.logs[0].args.image
-      // console.log("image is " + image)
+      console.log("image is " + image)
 
       res.json({
         image: image

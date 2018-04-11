@@ -44,7 +44,7 @@ describe('API', function() {
     // look here for inspiration https://thewayofcode.wordpress.com/2013/04/21/how-to-build-and-test-rest-api-with-nodejs-express-mocha/
 
     // params for the contract
-    const IMAGE = 1636;
+    const IMAGE = "harvard.edu";
     const CREATOR_ADDRESS = '0xf17f52151EbEF6C7334FAD080c5704D77216b732';
     const RECEIVER_ADDRESS = '0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef';
 
@@ -115,8 +115,9 @@ describe('API', function() {
               throw err;
             }
 
-            // JSON gives us back the image int as a string, so parse it
-            parseInt(res.body.image).should.equal(0);
+            // "0" is the error code
+            // TODO have the contract throw an error instead of returning 03
+            parseInt(res.body.image).should.equal("0");
             done();
           });
       });
