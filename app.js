@@ -16,11 +16,11 @@ var web3 = new Web3(provider)
 var Evidence = contract(EvidenceJSON);
 Evidence.setProvider(provider);
 
-// for now assume there's a global instance
-// var instance = null;
-// Evidence.deployed().then(function(_instance) {
-//     instance = _instance;
-// });
+// sample instance for testing
+var sampleInstance = null;
+Evidence.deployed().then(function(_instance) {
+    sampleInstance = _instance;
+});
 
 // set up express
 var app = express();
@@ -40,6 +40,7 @@ app.get('/hello', function (req, res) {
 // simple squaring function, does NOT call solidity
 app.post('/basic_square', (req, res) => {
   let x = parseInt(req.body.x)
+  console.log("x is " + x)
   let xSquared = x * x
   res.send("Answer: " + xSquared)
 });
@@ -47,9 +48,12 @@ app.post('/basic_square', (req, res) => {
 // cool squaring function, DOES call solidity
 app.post('/fancy_square', async (req, res) => {
   let x = parseInt(req.body.x)
+  console.log("x is " + x)
   try {
-    const xSquared = await Evidence.square(x)
-    res.send("Answer: " + xSquared)
+    const result = await sampleInstance.square.call(x)
+    console.log(result)
+    // the `result` is a BigNumber, need to turn it into a normal number
+    res.send("Answer: " + result.toNumber())
   }
   catch (e) {
     res.status(400).send("ERROR: " + e)
