@@ -31,10 +31,10 @@ For production purposes, may need Geth instead of Ganache: https://hackernoon.co
 ## Running the server
 
 * Double-click the Ganache icon to get it running.
-* `npm restart`
+* `npm start`
 * Then you can start running RESTful commands to interact with the blockchain via the API!
 
-Any time you change the server code and want to restart, do `npm restart`.
+Any time you change the server code and want to restart, do `npm quickstart`.
 
 ## Testing
 
@@ -42,7 +42,7 @@ For full testing, use `truffle test` (it calls both `TestEvidence.sol` and `test
 
 To test JUST the API (`test-mocha.js`), use `npm test`.
 
-Before you run tests, ensure the server is running! (Run the tests, `truffle test`, and the server, `npm restart`, in separate terminal tabs.)
+Before you run tests, ensure the server is running! (Run the tests, `truffle test`, and the server, `npm start`, in separate terminal tabs.)
 
 For some reason, `npm test` is more reliable than `truffle test`. So prefer `npm test` when testing the API.
 
