@@ -112,6 +112,7 @@ contract Evidence {
       success = false;
     }
 
+
     // refund any extra $$$ sent to this contract
     address self = this;
     msg.sender.transfer(self.balance);
