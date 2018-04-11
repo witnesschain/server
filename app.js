@@ -48,6 +48,9 @@ app.post('/new', async (req, res) => {
     var receiver = req.body.receiver_address
     var violation_type = 1;
 
+    console.log("Body is")
+    console.log(req.body)
+
     try {
       const newResult = await Evidence.new(image, lat, lon, price, desc, creator, receiver, violation_type, {from: creator, gas: 6721975 })
       // that gas limit is just the max that ganache offers, bit of a hack
