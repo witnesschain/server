@@ -32,10 +32,17 @@ app.use(bodyParser.json());
 
 // ROUTING
 
-// tester
+// tester ones
 app.get('/hello', function (req, res) {
   res.send('Hello!')
 });
+
+app.post('/basic_square', function(req, res) {
+  let x = req.body.x
+  let xSquared = x * x
+  res.send("Answer: " + xSquared)
+});
+
 
 app.post('/new', async (req, res) => {
     // TODO stop hardcoding, read all in from req
