@@ -351,7 +351,7 @@ describe('API', function() {
           })
       })
 
-      const RECEIVER_NAME = "Police Station " + Math.random()
+      const RECEIVER_NAME = "Police Station 123"
 
       it('should register a public receiver', (done) => {
         request(baseURL)
@@ -381,10 +381,10 @@ describe('API', function() {
             throw err
           }
 
-          // may be prior receivers registered, but ensure this one got registered
-          let lastReceiver = res.body[res.body.length - 1]
-          lastReceiver.address.should.equal(RECEIVER_ADDRESS)
-          lastReceiver.name.should.equal(RECEIVER_NAME)
+          // check that the desired address actually was registered
+          // this is a sort of hashmap 
+          let lastReceiverName = res.body[RECEIVER_ADDRESS]
+          lastReceiverName.should.equal(RECEIVER_NAME)
 
           done()
         })

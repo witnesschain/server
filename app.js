@@ -43,7 +43,7 @@ app.use(bodyParser.json());
 let allContracts = []
 // list of all publicly-named receivers. this is, e.g., police stations
 // who want citizens to send them stuff.
-let publicReceivers = []
+let publicReceivers = {}
 
 
 // ROUTING
@@ -238,10 +238,8 @@ app.post('/register_receiver', async (req, res) => {
     let receiver_address = req.body.receiver_address
     let receiver_name = req.body.receiver_name
 
-    publicReceivers.push({
-      address: receiver_address,
-      name: receiver_name
-    })
+    // treat this like a set mapping address to name
+    publicReceivers[receiver_address] = receiver_name
 
     res.send("Registered")
   }
@@ -251,5 +249,7 @@ app.post('/register_receiver', async (req, res) => {
 })
 
 app.get('/list_receivers', async (req, res) => {
+  console.log("All receivers: ")
+  console.log(publicReceivers)
   res.json(publicReceivers)
 })
