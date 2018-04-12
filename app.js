@@ -41,7 +41,9 @@ app.use(bodyParser.json());
 // Global state
 // list of all evidence contracts that have been created
 let allContracts = []
-
+// list of all publicly-named receivers. this is, e.g., police stations
+// who want citizens to send them stuff.
+let publicReceivers = []
 
 
 // ROUTING
@@ -229,4 +231,25 @@ app.get('/list_contracts', async (req, res) => {
   console.log("All created contracts: ")
   console.log(allContracts)
   res.json(allContracts)
+})
+
+app.post('/register_receiver', async (req, res) => {
+  try {
+    let receiver_address = req.body.receiver_address
+    let receiver_name = req.body.receiver_name
+
+    publicReceivers.push({
+      address: receiver_address,
+      name: receiver_name
+    })
+
+    res.send("Registered")
+  }
+  catch(e) {
+    res.status(400).send("Error: " + e)
+  }
+})
+
+app.get('/list_receivers', async (req, res) => {
+  res.json(publicReceivers)
 })

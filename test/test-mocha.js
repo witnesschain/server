@@ -249,7 +249,7 @@ describe('API', function() {
       });
     });
 
-    describe("Getting Public Data", () => {
+    describe("Public Data", () => {
 
       it("should gather the right public data", (done) => {
         request(baseURL)
@@ -350,5 +350,44 @@ describe('API', function() {
             done()
           })
       })
+
+      const RECEIVER_NAME = "Police Station " + Math.random()
+
+      it('should register a public receiver', (done) => {
+        request(baseURL)
+          .post("/register_receiver")
+          .send({
+            receiver_address: RECEIVER_ADDRESS,
+            receiver_name: RECEIVER_NAME
+          })
+          .expect(200).
+          end(function(err, res) {
+            if (err) {
+              throw err
+            }
+
+            res.text.should.equal("Registered")
+            done()
+          });
+      })
+
+    it('should list the registered receiver', (done) => {
+      request(baseURL)
+        .get("/list_receivers")
+        .query()
+        .expect(200)
+        .end(function(err, res) {
+          if (err) {
+            throw err
+          }
+
+          // may be prior receivers registered, but ensure this one got registered
+          let lastReceiver = res.body[res.body.length - 1]
+          lastReceiver.address.should.equal(RECEIVER_ADDRESS)
+          lastReceiver.name.should.equal(RECEIVER_NAME)
+
+          done()
+        })
     })
+  })
 });
