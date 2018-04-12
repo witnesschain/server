@@ -200,6 +200,7 @@ app.get('/public_data', async (req, res) => {
       receiver: await inst.receiver.call(),
       latitude: (await inst.latitude.call()).toNumber(),
       longitude: (await inst.longitude.call()).toNumber(),
+      timestamp: (await inst.timestamp.call()).toNumber(),
       // don't access description directly; this getter will convert the dirty
       // bytes32 to a nice string
       // TODO cleaner way to do this? is there a built-in getter for description?
@@ -209,9 +210,9 @@ app.get('/public_data', async (req, res) => {
       // instead store it as a string
       price: (await inst.price.call()).toString(),
       bought: await inst.bought.call(),
-      previewed: await inst.previewed.call()
+      previewed: await inst.previewed.call(),
     }
-    // console.log(result)
+    console.log(result)
 
     res.json(result)
   }

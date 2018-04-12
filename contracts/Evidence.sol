@@ -5,6 +5,7 @@ contract Evidence {
   address public receiver;
   int public latitude; //assume 6 decimal points. `int` == `int256` so we will have tons of storage.
   int public longitude; //assume 6 decimal points
+  uint public timestamp;
   bytes32 image;
   bytes32 public description;
   uint public violation_type;
@@ -25,21 +26,22 @@ contract Evidence {
     // constructor
     creator = _creator;
     receiver = _receiver;
-
     latitude = _lat;
     longitude = _lon;
-
     price = _price;
-
     image = _image;
     description = _desc;
-
     violation_type = _violation_type;
-
     price = _price;
 
     bought = false;
     previewed = false;
+
+    // timestamp is # of SECONDS since unix epoch that this block was mined
+    // accurate to within +- 900 seconds
+    // it's convenient to do this in ethereum so you don't have to pass it in
+    // from the client (also, impossible for someone to fake it this way)
+    timestamp = now;
   }
 
   modifier onlyReceiver() {

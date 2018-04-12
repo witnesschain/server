@@ -275,6 +275,16 @@ describe('API', function() {
             parseInt(res.body.longitude).should.equal(LONGITUDE)
             parseInt(res.body.violation_type).should.equal(VIOLATION_TYPE)
 
+            // for timestamp, we just wanna make sure this block was mined
+            // around the right time. Just to be safe, let's say the block was mined
+            // in +- 1 hour from right now.
+            // Also, convert timestamps from Milliseconds to Seconds.
+            const currentTimestamp = Math.floor(Date.now() / 1000)
+            const earliestTime = currentTimestamp - 60 * 60
+            const latestTime = currentTimestamp + 60 * 60
+            parseInt(res.body.timestamp).should.be.above(earliestTime)
+            parseInt(res.body.timestamp).should.be.below(latestTime)
+
             // string comparison
             res.body.description.should.equal(DESCRIPTION)
             res.body.price.should.equal(PRICE)
@@ -323,15 +333,19 @@ describe('API', function() {
 
             let returnedList = res.body
 
-            // this should contain contract 1's address and also contract 2's address
-            returnedList[0].address.should.equal(contractAddress)
-            returnedList[1].address.should.equal(secondContractAddress)
+            // there may be many contracts before this
+            // the 2nd-last one should be our first contract
+            // and the last one should be our second contract
+            let penultimateContract = returnedList[returnedList.length - 2]
+            let lastContract = returnedList[returnedList.length - 1]
+            penultimateContract.address.should.equal(contractAddress)
+            lastContract.address.should.equal(secondContractAddress)
 
             // it should also name the right creators and receivers
-            returnedList[0].receiver.should.equal(RECEIVER_ADDRESS)
-            returnedList[0].creator.should.equal(CREATOR_ADDRESS)
-            returnedList[1].receiver.should.equal(RECEIVER_ADDRESS)
-            returnedList[1].creator.should.equal(CREATOR_ADDRESS)
+            penultimateContract.receiver.should.equal(RECEIVER_ADDRESS)
+            penultimateContract.creator.should.equal(CREATOR_ADDRESS)
+            lastContract.receiver.should.equal(RECEIVER_ADDRESS)
+            lastContract.creator.should.equal(CREATOR_ADDRESS)
 
             done()
           })
