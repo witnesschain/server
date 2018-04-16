@@ -3,6 +3,10 @@
   "version": "0.0.1",
   "description": "WitnessChain",
   "main": "truffle.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/witnesschain/server.git"
+  },
   "directories": {
     "test": "test"
   },
