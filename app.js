@@ -5,6 +5,7 @@ var Web3            = require('web3'),
     path            = require('path'),
     ip              = require('ip'),
     BigNumber       = require('bignumber.js'),
+    keythereum      = require("keythereum"),
     EvidenceJSON    = require(path.join(__dirname, 'build/contracts/Evidence.json')),
     express         = require('express'),
     bodyParser      = require('body-parser'),
@@ -267,4 +268,21 @@ app.get('/list_receivers', async (req, res) => {
   // console.log("All receivers: ")
   console.log(publicReceivers)
   res.json(publicReceivers)
+})
+
+
+/*
+ * Generates an Ethereum address.
+ */
+app.post('/address', async (req, res) => {
+  try {
+    // use the password to generate a public/private key and address
+    let password = req.body.password
+
+
+  }
+  catch(e) {
+    res.status(400).send("Error: " + e)
+  }
+}
 })
