@@ -46,7 +46,39 @@ let allContracts = []
 let publicReceivers = {}
 
 
-// ROUTING
+//// HELPER FUNCTIONS
+
+/**
+  Grabs all the public data about a given contract instance `inst`.
+  This is an async function so you will need to await it!
+*/
+let getContractData = async (inst) => {
+  try {
+    return {
+      creator: await inst.creator.call(),
+      receiver: await inst.receiver.call(),
+      latitude: (await inst.latitude.call()).toNumber(),
+      longitude: (await inst.longitude.call()).toNumber(),
+      timestamp: (await inst.timestamp.call()).toNumber(),
+      // don't access description directly; this getter will convert the dirty
+      // bytes32 to a nice string
+      // TODO cleaner way to do this? is there a built-in getter for description?
+      description: utils.cleanSolidityString(await inst.getDescription.call()),
+      violation_type: (await inst.violation_type.call()).toNumber(),
+      // `price` is so huge that it might screw up the JS integer class
+      // instead store it as a string
+      price: (await inst.price.call()).toString(),
+      bought: await inst.bought.call(),
+      previewed: await inst.previewed.call()
+    }
+  }
+  catch(e) {
+    throw e
+  }
+}
+
+
+//// ROUTING
 
 // tester endpoints
 app.get('/hello', function (req, res) {
@@ -101,15 +133,14 @@ app.post('/new', async (req, res) => {
       console.log(`New contract created at ${newContractAddress}`)
 
       // store that we have created this contract
-      // store some basic information about the contract here
-      // some stuff should be dynamically retrieved such as previewed
-      // and bought, but key stuff that we need to filter on (like creator and
-      // receiver) should be here
-      allContracts.push({
-        address: newContractAddress,
-        creator: creator,
-        receiver: receiver
-      })
+      // now storing all info about contract
+      // get most info from the contract, not from the inputs,
+      // in case the contract did any data parsing/munging
+      let contractData = await getContractData(newContract)
+      // also include the contract's address, since that is NOT in the contract data
+      contractData.address = newContractAddress
+      // store this locally
+      allContracts.push(contractData)
 
       res.json({
         success: true,
@@ -197,23 +228,7 @@ app.get('/public_data', async (req, res) => {
   try {
     let inst = await Evidence.at(req.query.contract_address)
 
-    var result = {
-      creator: await inst.creator.call(),
-      receiver: await inst.receiver.call(),
-      latitude: (await inst.latitude.call()).toNumber(),
-      longitude: (await inst.longitude.call()).toNumber(),
-      timestamp: (await inst.timestamp.call()).toNumber(),
-      // don't access description directly; this getter will convert the dirty
-      // bytes32 to a nice string
-      // TODO cleaner way to do this? is there a built-in getter for description?
-      description: utils.cleanSolidityString(await inst.getDescription.call()),
-      violation_type: (await inst.violation_type.call()).toNumber(),
-      // `price` is so huge that it might screw up the JS integer class
-      // instead store it as a string
-      price: (await inst.price.call()).toString(),
-      bought: await inst.bought.call(),
-      previewed: await inst.previewed.call(),
-    }
+    var result = await getContractData(inst)
     console.log(result)
 
     res.json(result)
@@ -225,10 +240,10 @@ app.get('/public_data', async (req, res) => {
 })
 
 /**
-  Just returns the list of all contacts that we have been storing
+  Just returns the list of all contacts that have been created
 */
 app.get('/list_contracts', async (req, res) => {
-  console.log("All created contracts: ")
+  // console.log("All created contracts: ")
   console.log(allContracts)
   res.json(allContracts)
 })
@@ -241,7 +256,7 @@ app.post('/register_receiver', async (req, res) => {
     // treat this like a set mapping address to name
     publicReceivers[receiver_address] = receiver_name
 
-    res.send("Registered")
+    // res.send("Registered")
   }
   catch(e) {
     res.status(400).send("Error: " + e)
@@ -249,7 +264,7 @@ app.post('/register_receiver', async (req, res) => {
 })
 
 app.get('/list_receivers', async (req, res) => {
-  console.log("All receivers: ")
+  // console.log("All receivers: ")
   console.log(publicReceivers)
   res.json(publicReceivers)
 })

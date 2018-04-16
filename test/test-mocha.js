@@ -338,14 +338,25 @@ describe('API', function() {
             // and the last one should be our second contract
             let penultimateContract = returnedList[returnedList.length - 2]
             let lastContract = returnedList[returnedList.length - 1]
-            penultimateContract.address.should.equal(contractAddress)
-            lastContract.address.should.equal(secondContractAddress)
+            penultimateContract.address.toLowerCase().should.equal(
+              contractAddress.toLowerCase())
+            lastContract.address.toLowerCase().should.equal(
+              secondContractAddress.toLowerCase())
 
             // it should also name the right creators and receivers
-            penultimateContract.receiver.should.equal(RECEIVER_ADDRESS)
-            penultimateContract.creator.should.equal(CREATOR_ADDRESS)
-            lastContract.receiver.should.equal(RECEIVER_ADDRESS)
-            lastContract.creator.should.equal(CREATOR_ADDRESS)
+            penultimateContract.receiver.toLowerCase().should.equal(
+              RECEIVER_ADDRESS.toLowerCase())
+            penultimateContract.creator.toLowerCase().should.equal(
+              CREATOR_ADDRESS.toLowerCase())
+            lastContract.receiver.toLowerCase().should.equal(
+              RECEIVER_ADDRESS.toLowerCase())
+            lastContract.creator.toLowerCase().should.equal(
+              CREATOR_ADDRESS.toLowerCase())
+
+            // and correctly name a few other parameters
+            // just spot-checking here, there are many other parameters
+            penultimateContract.latitude.should.equal(LATITUDE)
+            lastContract.longitude.should.equal(LONGITUDE)
 
             done()
           })
@@ -382,7 +393,7 @@ describe('API', function() {
           }
 
           // check that the desired address actually was registered
-          // this is a sort of hashmap 
+          // this is a sort of hashmap
           let lastReceiverName = res.body[RECEIVER_ADDRESS]
           lastReceiverName.should.equal(RECEIVER_NAME)
 
