@@ -54,57 +54,108 @@ Parameters (in request body):
 * `longitude : Integer` - same caveat as above
 * `price : string` - a number in wei. It may be too big to store in JavaScript, so you can put the price in a string.
 * `description : String` - no more than 32 characters long
-* `creator_address : String` - a 40-character Ethereum address for the person who took the photos
-* `receiver_address : String` - a 40-character Ethereum address for the police station to receive the photos
+* `creator_address : String` - a 40-character Ethereum address for the person who took the photos. Also include the `0x` at the front, making it 42 characters.
+* `receiver_address : String` - a 40-character Ethereum address for the police station to receive the photos. Also include the `0x` at the front, making it 42 characters.
 * `violation_type : Integer` - unused for now, just use `1`
 
 Returns:
 
 * `success : Boolean`
-* `address : String` - the address of the newly-created contract
+* `address : String` - the address of the newly-created contract. Also includes the `0x` at the front, making it 42 characters.
 
-## Using the API
 
-See `test-mocha.js`, but for instance you can do:
 
-```
-  POST /new
-    in body:
-      image=12345
-      creator_address=0x123abc
-      receiver_address=0x456def
-    it will return the `address` of the created contract
+### `POST /preview`
 
-  GET /previewed
-    in body:
-      contract_address=0x333bbb
-    it will return a boolean `previewed` saying if the contract has been previewed
-```
+Previews the public-facing image of the given evidence contract.
 
-### Example
+Parameters:
 
-If you're using `httpie` the request (run at the command line) looks like this:
+* `contract_address : String` - the address of the desired contract, from `/new`. Also include the `0x` at the front, making it 42 characters.
+* `receiver_address : String` - the address of the police station that is previewing the evidence file (includes `0x`)
 
-```
-  http POST :3000/new image=12345 creator_address=0xf17f52151EbEF6C7334FAD080c5704D77216b732 receiver_address=0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef
-```
+Returns:
 
-You will get a response like this:
+* `image : String` - the previewed image id.
 
-```
-HTTP/1.1 200 OK
-Connection: keep-alive
-Content-Length: 71
-Content-Type: application/json; charset=utf-8
-Date: Sun, 08 Apr 2018 20:58:27 GMT
-ETag: W/"47-HZ8tao84xrCSIDw3Bti+pmg1r7Q"
-X-Powered-By: Express
 
-{
-    "address": "0x9e699d6c7ccf183f0b09675a9e867d1486eef85b",
-    "success": true
-}
-```
+### `GET /previewed`
+
+Tells you if the given evidence contract has been previewed.
+
+Parameters:
+
+* `contract_address : String` - the address of the desired contract, from `/new`. Also include the `0x` at the front, making it 42 characters.
+
+Returns:
+
+* `previewed : Boolean` - true if the contract has been previewed, false if not.
+
+
+
+### `POST /purchase`
+
+The police station buys this contract.
+
+Parameters:
+
+* `receiver_address : String` - the address of the police station that is buying the evidence file (includes `0x`)
+* `contract_address : String` - the address of the desired contract, from `/new`. Also include the `0x` at the front, making it 42 characters.
+* `money_amount : String/Number` - how much money, in `money_unit` units, the police station is offering. If you send too much money, you will be refunded anything above the price of the contract.
+* `money_unit : String` - one of `wei`, `ether`, `finney`, or `szabo`.
+
+Returns:
+
+* `success: Boolean`
+
+
+### `GET /public_data`
+
+Returns all public data about a contract, given its address.
+
+Parameters (in query/URL string):
+
+* `contract_address : String` - the address of the desired contract, from `/new`. Also include the `0x` at the front, making it 42 characters.
+
+Returns:
+
+* creator
+* receiver
+* latitude
+* longitude
+* `timestamp : Integer` - Unix timestamp of creation
+* description
+* violation_type
+* price
+* `bought : Boolean`
+* `previewed : Boolean`
+
+
+
+### `GET /list_contracts`
+
+Gives a full list of all contracts, including most public information about them.
+
+Parameters: None.
+
+Returns: an array of all contracts, each including information similar to what's returned by `public_data` - besides `bought` and `previewed` since those are not constant.
+
+
+### `POST /address`
+
+Randomly generates an Ethereum address and private key from a given password.
+
+Parameters:
+
+* `password : String` - a strong password that will be used to generate this address. Can be any length.
+
+Returns a JSON object containing:
+
+* `privateKey : String` - the generated private key, encoded in base 16. There's no `0x` here.
+* `keyObject`, which looks like [what you see in `var keyObject` here](https://github.com/ethereumjs/keythereum#key-export)
+
+You can find the address, initialization vector, and salt in the `keyObject`.
+
 
 
 ## Random links
