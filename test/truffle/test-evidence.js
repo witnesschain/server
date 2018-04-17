@@ -89,10 +89,17 @@ contract('Evidence', function([creator, receiver]) {
     // that is "tainted" since they lost some $$$ from gas
     let creatorPreBalance = web3.eth.getBalance(creator).toNumber()
 
-    let purchaseTransaction = await evid.purchase.sendTransaction({
+    let purchaseTransactionHash = await evid.purchase.sendTransaction({
       value: valueOffered,
       from: receiver
     })
+    // TODO this doesn't work rn, but it could be useful in helping specify
+    // how much ETH should be left in sender's account
+    // // get details about the transaction to figure out how much ETH would be spent
+    // let transactionDetails = web3.eth.getTransaction(purchaseTransactionHash)
+    // let gasSpent = transactionDetails.gas
+    // let gasPrice = transactionDetails.gasPrice.toNumber()
+    // console.log(gasPrice + "*" + gasPrice)
 
     // ensure the creator earned exactly as much $ as the receiver sent it
     let creatorPostBalance = web3.eth.getBalance(creator).toNumber()
