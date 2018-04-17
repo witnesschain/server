@@ -1,4 +1,4 @@
-const Evidence = artifacts.require('../contracts/Evidence.sol')
+const Evidence = artifacts.require('../../contracts/Evidence.sol')
 
 // utils
 let cleanSolidityString = (str) => str.replace(/\0[\s\S]*$/g,'')
@@ -10,9 +10,9 @@ contract('Evidence', function([creator, receiver]) {
   let evid
 
   // const vars for testing
-  //uint[] _clearImages, uint[] _blurredImages, int _lat, int _long, uint _price, string _desc, address _receiver, uint _violation_type
-  var clearImages = ["buzz", "woody", "marlin", "nemo"];
-  var blurredImages = ["zzub", "ydoow", "nilram", "omen"];
+  //uint[] _clear_images, uint[] _blurred_images, int _lat, int _long, uint _price, string _desc, address _receiver, uint _violation_type
+  var clear_images = ["buzz", "woody", "marlin", "nemo"];
+  var blurred_images = ["zzub", "ydoow", "nilram", "omen"];
   var lat = 42000000;
   var lon = -73000000;
   var price = 1e+18; // 1 ether, in wei
@@ -20,7 +20,7 @@ contract('Evidence', function([creator, receiver]) {
   var violation_type = 1;
 
   before('set up a contract to use in all tests', async () => {
-    evid = await Evidence.new(clearImages, blurredImages, lat, lon, price, desc, creator, receiver, violation_type)
+    evid = await Evidence.new(clear_images, blurred_images, lat, lon, price, desc, creator, receiver, violation_type)
     console.log(await evid.address)
   })
 
@@ -34,6 +34,20 @@ contract('Evidence', function([creator, receiver]) {
     assert.equal(await evid.price(), price)
   })
 
+  it('calls getter functions correctly', async() => {
+    // get blurred images
+    let purportedBlurredImagesRaw = await evid.getBlurredImages()
+    let purportedBlurredImages = purportedBlurredImagesRaw.map(
+      (s) => cleanSolidityString(web3.toAscii(s)))
+    assert.deepEqual(purportedBlurredImages, blurred_images)
+
+    // get description
+    let purportedDescriptionRaw = await evid.getDescription()
+    // description is a string, but has extra \0's on the end
+    let purportedDescription = cleanSolidityString(purportedDescriptionRaw)
+    assert.equal(purportedDescription, desc)
+  })
+
   it('previews correctly', async () => {
     // the output is a raw bytes32 list
     // need to convert to ascii's
@@ -41,7 +55,7 @@ contract('Evidence', function([creator, receiver]) {
     let previewImages = previewImagesRaw.map((s) => cleanSolidityString(web3.toAscii(s)))
     // console.log(previewImagesRaw)
     // console.log(previewImages)
-    assert.deepEqual(previewImages, blurredImages)
+    assert.deepEqual(previewImages, blurred_images)
   })
 
   it('should NOT purchase with insufficient funds', async () => {
@@ -70,8 +84,9 @@ contract('Evidence', function([creator, receiver]) {
     // TODO: and see if we get some back
     let valueOffered = price * 3
 
-    // pre-txn balance of creator and receiver
-    let receiverPreBalance = web3.eth.getBalance(receiver).toNumber()
+    // pre-txn balance of creator
+    // we can't measure how much money the receiver lost rn, because
+    // that is "tainted" since they lost some $$$ from gas
     let creatorPreBalance = web3.eth.getBalance(creator).toNumber()
 
     let purchaseTransaction = await evid.purchase.sendTransaction({
@@ -80,9 +95,6 @@ contract('Evidence', function([creator, receiver]) {
     })
 
     // ensure the creator earned exactly as much $ as the receiver sent it
-    // and the receiver lost the exact same amount
-    let receiverPostBalance = web3.eth.getBalance(receiver).toNumber()
-    assert.equal(creatorPreBalance - creatorPostBalance, price)
     let creatorPostBalance = web3.eth.getBalance(creator).toNumber()
     assert.equal(creatorPostBalance - creatorPreBalance, price)
 
@@ -100,7 +112,7 @@ contract('Evidence', function([creator, receiver]) {
     let previewImages = previewImagesRaw.map((s) => cleanSolidityString(web3.toAscii(s)))
     // console.log(previewImagesRaw)
     // console.log(previewImages)
-    assert.deepEqual(previewImages, clearImages)
+    assert.deepEqual(previewImages, clear_images)
   })
 
   // it('has an owner', async function() {
