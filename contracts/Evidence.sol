@@ -6,8 +6,8 @@ contract Evidence {
   int public latitude; //assume 6 decimal points. `int` == `int256` so we will have tons of storage.
   int public longitude; //assume 6 decimal points
   uint public timestamp;
-  uint[4] clearImages; // make as hard to access as possible for the unauthorized
-  uint[4] public blurredImages;
+  bytes32[4] clearImages; // make as hard to access as possible for the unauthorized
+  bytes32[4] public blurredImages;
   bytes32 public description;
   uint public violation_type;
   bool public bought;
@@ -16,7 +16,10 @@ contract Evidence {
   event Purchased(bool success);
 
 
-  function Evidence(uint[4] _clearImages, uint[4] _blurredImages, int _lat, int _lon, uint _price, bytes32 _desc, address _creator, address _receiver, uint _violation_type) public {
+  function Evidence(bytes32[4] _clearImages, bytes32[4] _blurredImages, int _lat, int _lon, uint _price, bytes32 _desc, address _creator, address _receiver, uint _violation_type) public {
+
+    // TODO ensure that image arrays have length (0..4), i.e. [1..3]
+
     // constructor
     creator = _creator;
     receiver = _receiver;
@@ -66,10 +69,16 @@ contract Evidence {
   }
 
   /**
-  * Returns the blurred images.
+  * Returns the best images available to the receiver: the previews
+  * if the receiver has not purchased, or the actual images if they have
   */
-  function preview() public constant returns (uint[4] _images) {
-    _images = blurredImages;
+  function preview() public constant onlyReceiver returns (bytes32[4] _images) {
+    if (bought == true) {
+      _images = clearImages;
+    }
+    else {
+      _images = blurredImages;
+    }
   }
 
 

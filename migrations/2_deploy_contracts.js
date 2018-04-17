@@ -1,7 +1,7 @@
 var Evidence = artifacts.require("Evidence");
 
 module.exports = function(deployer) {
-  //uint _image, int _lat, int _long, uint _price, string _desc, address _receiver, uint _violation_type
+  //uint[] _clearImages, uint[] _blurredImages, int _lat, int _long, uint _price, string _desc, address _receiver, uint _violation_type
   var clearImages = [1234,2345,3456,4567];
   var blurredImages = [1111,2222,3333,4444];
   var lat = 42000000;

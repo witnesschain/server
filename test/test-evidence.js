@@ -1,27 +1,102 @@
 const Evidence = artifacts.require('../contracts/Evidence.sol')
 
-contract('Evidence', function([a1, a2]) {
+// utils
+let cleanSolidityString = (str) => str.replace(/\0[\s\S]*$/g,'')
+
+
+contract('Evidence', function([creator, receiver]) {
+  // creator and receiver are address strings we can use!
+
   let evid
 
-  beforeEach('setup contract for each test', async function() {
-    //uint[] _clearImages, uint[] _blurredImages, int _lat, int _long, uint _price, string _desc, address _receiver, uint _violation_type
-    var clearImages = [1234,2345,3456,4567];
-    var blurredImages = [1111,2222,3333,4444];
-    var lat = 42000000;
-    var lon = -73000000;
-    var price = "1000000000000000000"; // 1 ether, in wei
-    var desc = "hello";
-    var creator = "0xf17f52151EbEF6C7334FAD080c5704D77216b732";
-    var receiver = "0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef";
-    var violation_type = 1;
+  // const vars for testing
+  //uint[] _clearImages, uint[] _blurredImages, int _lat, int _long, uint _price, string _desc, address _receiver, uint _violation_type
+  var clearImages = ["buzz", "woody", "marlin", "nemo"];
+  var blurredImages = ["zzub", "ydoow", "nilram", "omen"];
+  var lat = 42000000;
+  var lon = -73000000;
+  var price = 1e+18; // 1 ether, in wei
+  var desc = "hello";
+  var violation_type = 1;
 
+  before('set up a contract to use in all tests', async () => {
     evid = await Evidence.new(clearImages, blurredImages, lat, lon, price, desc, creator, receiver, violation_type)
+    console.log(await evid.address)
   })
 
   it('passes a trivial test', async () => {
     assert.equal(3, 3)
+  })
 
-    console.log([a1, a2])
+  it('correctly stored basic variables', async () => {
+    assert.equal(await evid.violation_type(), violation_type)
+    assert.equal(await evid.creator(), creator)
+    assert.equal(await evid.price(), price)
+  })
+
+  it('previews correctly', async () => {
+    // the output is a raw bytes32 list
+    // need to convert to ascii's
+    let previewImagesRaw = await evid.preview()
+    let previewImages = previewImagesRaw.map((s) => cleanSolidityString(web3.toAscii(s)))
+    // console.log(previewImagesRaw)
+    // console.log(previewImages)
+    assert.deepEqual(previewImages, blurredImages)
+  })
+
+  it('should NOT purchase with insufficient funds', async () => {
+    // try sending LESS money than needed
+    let valueOffered = price / 10
+
+    // pre-txn balance of creator
+    let creatorPreBalance = web3.eth.getBalance(creator).toNumber()
+
+    let purchaseTransaction = await evid.purchase.sendTransaction({
+      value: valueOffered,
+      from: receiver
+    })
+
+    // ensure the receiver has earned no money
+    let creatorPostBalance = web3.eth.getBalance(creator).toNumber()
+    assert.equal(creatorPostBalance, creatorPreBalance)
+
+    // should not say bought
+    assert.equal(await evid.bought(), false)
+  })
+
+
+  it('should purchase with sufficient funds', async () => {
+    // try sending EXTRA money
+    // TODO: and see if we get some back
+    let valueOffered = price * 3
+
+    // pre-txn balance of creator
+    let creatorPreBalance = web3.eth.getBalance(creator).toNumber()
+
+    let purchaseTransaction = await evid.purchase.sendTransaction({
+      value: valueOffered,
+      from: receiver
+    })
+
+    // ensure the creator earned exactly as much $ as the receiver sent it
+    let creatorPostBalance = web3.eth.getBalance(creator).toNumber()
+    assert.equal(creatorPostBalance - creatorPreBalance, price)
+
+    // should say it was bought
+    assert.equal(await evid.bought(), true)
+  })
+
+  it('previews correctly after purchase', async () => {
+    // similar to before, except we should have gotten the CLEAR images
+    // not the BLURRED ones since we bought it
+
+    // the output is a raw bytes32 list
+    // need to convert to ascii's
+    let previewImagesRaw = await evid.preview()
+    let previewImages = previewImagesRaw.map((s) => cleanSolidityString(web3.toAscii(s)))
+    // console.log(previewImagesRaw)
+    // console.log(previewImages)
+    assert.deepEqual(previewImages, clearImages)
   })
 
   // it('has an owner', async function() {
