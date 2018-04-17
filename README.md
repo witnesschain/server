@@ -18,13 +18,10 @@ Any time you change the server code and want to restart, do `npm quickstart`.
 
 ## Testing
 
-For full testing, use `truffle test` (it calls both `TestEvidence.sol` and `test-mocha.js`).
-
-To test JUST the API (`test-mocha.js`), use `npm test`.
+Run `npm test` to test the server and API, and `npm run truffletest` to test just the contract.
 
 Before you run tests, ensure the server is running! (Run the tests, `truffle test`, and the server, `npm start`, in separate terminal tabs.)
 
-For some reason, `npm test` is more reliable than `truffle test`. So prefer `npm test` when testing the API.
 
 ## Ganache
 
@@ -49,7 +46,8 @@ Creates a new address.
 
 Parameters (in request body):
 
-* `image : String` - a unique ID for the image (mad 32 characters). This may need to be a timestamp or something instead of the full URL, since this string can be no more than 32 characters.
+* `clear_images : String[]` - unique IDs for all full-quality images (max 32 characters each). This may need to be a timestamp or something instead of the full URL, since this string can be no more than 32 characters. These clear images will only be shown to police stations (receivers) who purchase the evidence.
+* `blurred_images : String[]` - like above, unique IDs for all blurred images (max 32 characters each). Blurred images will be public, so identifying information should be blurred out.
 * `latitude : Integer` - use 6 decimal places, so that latitude `42.5` becomes `42500000`
 * `longitude : Integer` - same caveat as above
 * `price : string` - a number in wei. It may be too big to store in JavaScript, so you can put the price in a string.
@@ -67,7 +65,7 @@ Returns:
 
 ### `POST /preview`
 
-Previews the public-facing image of the given evidence contract.
+Shows the best available images of the given evidence contract. If the receiver hasn't bought the evidence yet, they'll see blurred images. If they have bought the evidence, they'll see clear images.
 
 Parameters:
 
@@ -76,20 +74,7 @@ Parameters:
 
 Returns:
 
-* `image : String` - the previewed image id.
-
-
-### `GET /previewed`
-
-Tells you if the given evidence contract has been previewed.
-
-Parameters:
-
-* `contract_address : String` - the address of the desired contract, from `/new`. Also include the `0x` at the front, making it 42 characters.
-
-Returns:
-
-* `previewed : Boolean` - true if the contract has been previewed, false if not.
+* `images : String[]` - an array of string IDs.
 
 
 
@@ -127,6 +112,7 @@ Returns:
 * description
 * violation_type
 * price
+* `blurred_images : String[]`
 * `bought : Boolean`
 * `previewed : Boolean`
 

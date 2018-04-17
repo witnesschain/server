@@ -1,7 +1,7 @@
 var should = require('should');
 var assert = require('assert');
 var request = require('supertest');
-var utils = require('../src/utils.js');
+var utils = require('../../src/utils.js');
 
 // var mongoose = require('mongoose');
 // var winston = require('winston');
@@ -47,7 +47,8 @@ describe('API', function() {
 
     /* VARIABLES */
     // params for the contracts
-    const IMAGE = "harvard.edu"
+    const CLEAR_IMAGES = ["buzz", "woody", "marlin", "nemo"]
+    const BLURRED_IMAGES = ["zzub", "ydoow", "nilram", "omen"]
     const CREATOR_ADDRESS = '0xf17f52151EbEF6C7334FAD080c5704D77216b732'
     const RECEIVER_ADDRESS = '0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef'
     const LATITUDE = 42000000
@@ -64,7 +65,8 @@ describe('API', function() {
       return request(baseURL)
         .post("/new")
         .send({
-          image: IMAGE,
+          clear_images: CLEAR_IMAGES,
+          blurred_images: BLURRED_IMAGES,
           creator_address: CREATOR_ADDRESS,
           receiver_address: RECEIVER_ADDRESS,
           latitude: LATITUDE,
@@ -104,7 +106,7 @@ describe('API', function() {
     });
 
     describe("Preview", function(){
-      it("should you preview the first time", function(done){
+      it("should show blurred images on preview", function(done){
         request(baseURL)
           .post("/preview")
           .send({
@@ -118,48 +120,11 @@ describe('API', function() {
               throw err;
             }
 
-            // JSON gives us back the image int as a string, so parse it
-            res.body.image.should.equal(IMAGE);
-            done();
-          });
-      });
+            // we should get the blurred images out
+            let images = res.body.images
+            images.should.deepEqual(BLURRED_IMAGES)
 
-      it("should NOT you preview the second time", function(done){
-        request(baseURL)
-          .post("/preview")
-          .send({
-            contract_address: contractAddress,
-            receiver_address: RECEIVER_ADDRESS
-          })
-          .expect(200)
-          .end(function(err, res) {
-            // console.log("hello");
-            if (err) {
-              throw err;
-            }
-
-            // "0" is the error code
-            // TODO have the contract throw an error instead of returning 03
-            res.body.image.should.equal("0");
-            done();
-          });
-      });
-
-      it("should say previewed is true", function(done){
-        request(baseURL)
-          .get("/previewed")
-          .query({
-            contract_address: contractAddress
-          })
-          .expect(200)
-          .end(function(err, res) {
-            // console.log("hello");
-            if (err) {
-              throw err;
-            }
-
-            res.body.previewed.should.equal(true);
-            done();
+            done()
           });
       });
     });
@@ -247,6 +212,28 @@ describe('API', function() {
             done()
           });
       });
+
+      it("should show clear images on preview", function(done){
+        request(baseURL)
+          .post("/preview")
+          .send({
+            contract_address: contractAddress,
+            receiver_address: RECEIVER_ADDRESS
+          })
+          .expect(200)
+          .end(function(err, res) {
+            // console.log("hello");
+            if (err) {
+              throw err;
+            }
+
+            // we should get the clear images out
+            let images = res.body.images
+            images.should.deepEqual(CLEAR_IMAGES)
+
+            done()
+          });
+      });
     });
 
 
@@ -319,7 +306,6 @@ describe('API', function() {
 
             // boolean comparison
             res.body.bought.should.equal(true)
-            res.body.previewed.should.equal(true)
 
             done()
           })

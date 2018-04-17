@@ -6,36 +6,33 @@ contract Evidence {
   int public latitude; //assume 6 decimal points. `int` == `int256` so we will have tons of storage.
   int public longitude; //assume 6 decimal points
   uint public timestamp;
-  bytes32 image;
+  bytes32[4] clear_images; // make as hard to access as possible for the unauthorized
+  bytes32[4] public blurred_images;
   bytes32 public description;
   uint public violation_type;
   bool public bought;
-  bool public previewed;
   uint public price; //in Wei
 
-  event Previewed(string image);
   event Purchased(bool success);
 
-  // ADD DATE TIME - https://github.com/pipermerriam/ethereum-datetime
 
-  // modifier restricted() {
-  //   if (msg.sender == owner) _;
-  // }
+  function Evidence(bytes32[4] _clear_images, bytes32[4] _blurred_images, int _lat, int _lon, uint _price, bytes32 _desc, address _creator, address _receiver, uint _violation_type) public {
 
-  function Evidence(bytes32 _image, int _lat, int _lon, uint _price, bytes32 _desc, address _creator, address _receiver, uint _violation_type) public {
+    // TODO ensure that image arrays have length (0..4), i.e. [1..3]
+
     // constructor
     creator = _creator;
     receiver = _receiver;
     latitude = _lat;
     longitude = _lon;
     price = _price;
-    image = _image;
+    clear_images = _clear_images;
+    blurred_images = _blurred_images;
     description = _desc;
     violation_type = _violation_type;
     price = _price;
 
     bought = false;
-    previewed = false;
 
     // timestamp is # of SECONDS since unix epoch that this block was mined
     // accurate to within +- 900 seconds
@@ -72,27 +69,18 @@ contract Evidence {
   }
 
   /**
-    Returns the image string, or "0" if it failed.
+  * Returns the best images available to the receiver: the previews
+  * if the receiver has not purchased, or the actual images if they have
   */
-  function preview() public onlyCreatorOrReceiver returns (bytes32 _image) {
-    if (bought == true){
-      // if person checking is the receiver? Can we check that?
-      _image = image;
-    } else {
-      if (previewed == false){
-        previewed = true;
-        _image = image;
-      } else {
-        _image = "0";
-      }
+  function preview() public view onlyReceiver returns (bytes32[4] _images) {
+    if (bought == true) {
+      _images = clear_images;
     }
-
-    // you can't send return values for a transaction,
-    // so we should raise an event instead
-    // also, humans can't read bytes32 (you get some hex junk),
-    // so convert to strings before sending stuff back
-    emit Previewed(bytes32ToString(_image));
+    else {
+      _images = blurred_images;
+    }
   }
+
 
   function purchase() public payable onlyReceiver returns (bool) {
     // TODO for all these functions, ensure that the caller is
@@ -102,7 +90,6 @@ contract Evidence {
     if (msg.value >= price && bought == false) {
       // success, buy!
       bought = true;
-      previewed = true;
 
       // send `price` ethers to the creator who submitted it
       creator.transfer(price);
@@ -125,13 +112,19 @@ contract Evidence {
   // fallback fn
   function() public payable { }
 
+  // call this instead of getting blurred_images directly... that doesn't work
+  // odly
+  function getBlurredImages() public constant returns (bytes32[4]) {
+    return blurred_images;
+  }
 
-  function getDescription() public returns (string) {
+
+  function getDescription() public constant returns (string) {
     return bytes32ToString(description);
   }
 
 
-  // convert bytes32 to string
+  // convert bytes32 (human-illegible) to string (legible!)
   // TODO: problem where string has a lot of dumb 0 characters at the end
   function bytes32ToString (bytes32 data) public pure returns (string) {
       bytes memory bytesString = new bytes(32);
