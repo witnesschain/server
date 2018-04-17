@@ -10,15 +10,16 @@ contract TestEvidence {
 
   Evidence evidence = Evidence(DeployedAddresses.Evidence());
 
-  bytes32 image = "harvard.edu";
-  int lat = 4200000000;
-  int lon = -7300000000;
+  uint[] clearImages = [1234, 2345, 3456, 4567];
+  uint[] blurredImages = [1111, 2222, 3333, 4444];
+  int lat = 42000000;
+  int lon = -73000000;
   uint price = 1 ether;
   bytes32 desc = "hello";
   address creator = 0xf17f52151EbEF6C7334FAD080c5704D77216b732;
   address receiver = this;
   uint violation_type = 1;
-  Evidence evid = new Evidence(image, lat, lon, price, desc, creator, receiver, violation_type);
+  Evidence evid = new Evidence(clearImages, blurredImages, lat, lon, price, desc, creator, receiver, violation_type);
 
   function testDumb() public {
     // just to make sure the testing suite works
@@ -31,19 +32,9 @@ contract TestEvidence {
   }
 
   function testPreview() public {
-    // ensure we get the right image out in preview
-    bytes32 imageOut = evid.preview();
-    Assert.equal(image, imageOut, "Preview should return original image");
-
-    // ensure the preview thing is set properly
-    bool previewed = evid.previewed();
-    Assert.equal(previewed, true, "Preview should set previewed=true");
-
-    // preview twice
-
-    imageOut = evid.preview();
-    Assert.equal("0", imageOut, "Should not be able to preview twice");
-
+    // ensure we get the blurred images out in preview
+    uint[] imagesOut = evid.preview();
+    Assert.equal(blurredImages, imagesOut, "Preview should return original blurred images");
   }
 
   function testPurchase() public {
@@ -68,8 +59,8 @@ contract TestEvidence {
     Assert.equal(out, true, "Should be enough money for payment to succeed");
     bought = evid.bought();
     Assert.equal(bought, true, "Bought is true");
-    bytes32 imageOut = evid.preview();
-    Assert.equal(image, imageOut, "Preview should return original image");
+    uint[] imagesOut = evid.preview();
+    Assert.equal(blurredImages, imagesOut, "Preview should return original blurred images");
 
     uint256 creatorBalanceAfter = creator.balance;
     uint256 creatorBalanceAfterPredicted = creatorBalanceBefore + price;
