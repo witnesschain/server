@@ -37,7 +37,7 @@ contract('Evidence', function([creator, receiver]) {
   it('previews correctly', async () => {
     // the output is a raw bytes32 list
     // need to convert to ascii's
-    let previewImagesRaw = await evid.preview()
+    let previewImagesRaw = await evid.preview({ from: receiver })
     let previewImages = previewImagesRaw.map((s) => cleanSolidityString(web3.toAscii(s)))
     // console.log(previewImagesRaw)
     // console.log(previewImages)
@@ -92,7 +92,7 @@ contract('Evidence', function([creator, receiver]) {
 
     // the output is a raw bytes32 list
     // need to convert to ascii's
-    let previewImagesRaw = await evid.preview()
+    let previewImagesRaw = await evid.preview({ from: receiver })
     let previewImages = previewImagesRaw.map((s) => cleanSolidityString(web3.toAscii(s)))
     // console.log(previewImagesRaw)
     // console.log(previewImages)
