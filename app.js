@@ -83,7 +83,8 @@ app.post('/fancy_square', async (req, res) => {
 
 
 app.post('/new', async (req, res) => {
-    var image = req.body.image
+    var clear_images = req.body.clear_images
+    var blurred_images = req.body.blurred_images
     var lat = req.body.latitude
     var lon = req.body.longitude
     var price = req.body.price
@@ -96,7 +97,7 @@ app.post('/new', async (req, res) => {
     // console.log(req.body)
 
     try {
-      const newResult = await Evidence.new(image, lat, lon, price, desc, creator, receiver, violation_type, {from: creator, gas: 6721975 })
+      const newResult = await Evidence.new(clear_images, blurred_images, lat, lon, price, desc, creator, receiver, violation_type, {from: creator, gas: 6721975 })
       // that gas limit is just the max that ganache offers, bit of a hack
       // otherwise we run out of gas with this method
       // console.log(newResult)
@@ -113,6 +114,7 @@ app.post('/new', async (req, res) => {
         address: newContractAddress,
         creator: creator,
         receiver: receiver,
+        blurred_images: blurred_images,
         latitude: lat,
         longitude: lon,
         timestamp: newContract.timestamp.call().toNumber(),
@@ -139,44 +141,21 @@ app.post('/new', async (req, res) => {
 app.post('/preview', async (req, res) => {
   try {
     let inst = await Evidence.at(req.body.contract_address)
-    // console.log(inst)
 
-    let previewResult = await inst.preview({
+    // the returned body is a list of images as bytes32s
+    // need to clean
+    let rawImages = await inst.preview.call({
       from: req.body.receiver_address
     })
+    let images = rawImages.map(utils.bytes32ToString)
+    // console.log("PREVIEWED:", images)
 
-    // console.log(previewResult)
-
-    if (previewResult.logs[0]) {
-      const image = previewResult.logs[0].args.image
-      // this image string may have lots of stupid trailing null chars (\u0000)
-      // so trim them
-      const cleanedImage = utils.cleanSolidityString(image)
-      // console.log("image is " + cleanedImage)
-
-      res.json({
-        image: cleanedImage
-      })
-    }
-  }
-  catch(e) {
-    // console.log(e)
-    res.status(400).send("Error: " + e);
-  }
-});
-
-app.get('/previewed', async (req, res) => {
-  // console.log("you said " + req.query.contract_address);
-  try {
-    let inst = await Evidence.at(req.query.contract_address);
-
-    var out = await inst.previewed.call();
     res.json({
-      previewed: out
-    });
+      images: images
+    })
   }
   catch(e) {
-    // console.log(e)
+    console.log(e)
     res.status(400).send("Error: " + e);
   }
 });
@@ -213,6 +192,8 @@ app.get('/public_data', async (req, res) => {
     var result = {
       creator: await inst.creator.call(),
       receiver: await inst.receiver.call(),
+      // TODO specify cleaning functions for all of these? so no duplication
+      blurred_images: (await inst.getBlurredImages.call()).map(utils.bytes32ToString),
       latitude: (await inst.latitude.call()).toNumber(),
       longitude: (await inst.longitude.call()).toNumber(),
       timestamp: (await inst.timestamp.call()).toNumber(),
@@ -224,8 +205,7 @@ app.get('/public_data', async (req, res) => {
       // `price` is so huge that it might screw up the JS integer class
       // instead store it as a string
       price: (await inst.price.call()).toString(),
-      bought: await inst.bought.call(),
-      previewed: await inst.previewed.call()
+      bought: await inst.bought.call()
     }
 
     console.log(result)
@@ -233,7 +213,7 @@ app.get('/public_data', async (req, res) => {
     res.json(result)
   }
   catch(e) {
-    // console.log(e)
+    console.log(e)
     res.status(400).send("Error: " + e)
   }
 })
