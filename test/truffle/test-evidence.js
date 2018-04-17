@@ -81,7 +81,7 @@ contract('Evidence', function([creator, receiver]) {
 
   it('should purchase with sufficient funds', async () => {
     // try sending EXTRA money
-    // TODO: and see if we get some back
+    // TODO: see if we get some back
     let valueOffered = price * 3
 
     // pre-txn balance of creator
