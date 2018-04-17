@@ -6,8 +6,8 @@ contract Evidence {
   int public latitude; //assume 6 decimal points. `int` == `int256` so we will have tons of storage.
   int public longitude; //assume 6 decimal points
   uint public timestamp;
-  bytes32[4] clearImages; // make as hard to access as possible for the unauthorized
-  bytes32[4] public blurredImages;
+  bytes32[4] clear_images; // make as hard to access as possible for the unauthorized
+  bytes32[4] public blurred_images;
   bytes32 public description;
   uint public violation_type;
   bool public bought;
@@ -16,7 +16,7 @@ contract Evidence {
   event Purchased(bool success);
 
 
-  function Evidence(bytes32[4] _clearImages, bytes32[4] _blurredImages, int _lat, int _lon, uint _price, bytes32 _desc, address _creator, address _receiver, uint _violation_type) public {
+  function Evidence(bytes32[4] _clear_images, bytes32[4] _blurred_images, int _lat, int _lon, uint _price, bytes32 _desc, address _creator, address _receiver, uint _violation_type) public {
 
     // TODO ensure that image arrays have length (0..4), i.e. [1..3]
 
@@ -26,8 +26,8 @@ contract Evidence {
     latitude = _lat;
     longitude = _lon;
     price = _price;
-    clearImages = _clearImages;
-    blurredImages = _blurredImages;
+    clear_images = _clear_images;
+    blurred_images = _blurred_images;
     description = _desc;
     violation_type = _violation_type;
     price = _price;
@@ -72,12 +72,12 @@ contract Evidence {
   * Returns the best images available to the receiver: the previews
   * if the receiver has not purchased, or the actual images if they have
   */
-  function preview() public constant onlyReceiver returns (bytes32[4] _images) {
+  function preview() public view onlyReceiver returns (bytes32[4] _images) {
     if (bought == true) {
-      _images = clearImages;
+      _images = clear_images;
     }
     else {
-      _images = blurredImages;
+      _images = blurred_images;
     }
   }
 
@@ -111,6 +111,12 @@ contract Evidence {
 
   // fallback fn
   function() public payable { }
+
+  // call this instead of getting blurred_images directly... that doesn't work
+  // odly
+  function getBlurredImages() public constant returns (bytes32[4]) {
+    return blurred_images;
+  }
 
 
   function getDescription() public constant returns (string) {
