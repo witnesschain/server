@@ -70,7 +70,8 @@ contract('Evidence', function([creator, receiver]) {
     // TODO: and see if we get some back
     let valueOffered = price * 3
 
-    // pre-txn balance of creator
+    // pre-txn balance of creator and receiver
+    let receiverPreBalance = web3.eth.getBalance(receiver).toNumber()
     let creatorPreBalance = web3.eth.getBalance(creator).toNumber()
 
     let purchaseTransaction = await evid.purchase.sendTransaction({
@@ -79,6 +80,9 @@ contract('Evidence', function([creator, receiver]) {
     })
 
     // ensure the creator earned exactly as much $ as the receiver sent it
+    // and the receiver lost the exact same amount
+    let receiverPostBalance = web3.eth.getBalance(receiver).toNumber()
+    assert.equal(creatorPreBalance - creatorPostBalance, price)
     let creatorPostBalance = web3.eth.getBalance(creator).toNumber()
     assert.equal(creatorPostBalance - creatorPreBalance, price)
 
