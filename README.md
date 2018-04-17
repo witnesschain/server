@@ -1,24 +1,4 @@
-
-# Development
-
-Start with this: http://truffleframework.com/tutorials/pet-shop
-
-Pet-shop repo: https://github.com/truffle-box/pet-shop-box
-
-This is ok but not that great: https://medium.com/etherereum-salon/hello-ethereum-solan-contract-4643118a6119
-
-Use this IDE: https://github.com/ethereum/remix-ide
-
-Test out contracts here: https://www.myetherwallet.com/#contracts
-
-Solidity tips: https://ethereumbuilders.gitbooks.io/guide/content/en/solidity_tutorials.html
-
-IPFS stuff: https://medium.com/@didil/off-chain-data-storage-ethereum-ipfs-570e030432cf
-
-To make a Node.js server: https://ethereum.stackexchange.com/questions/24684/truffle-and-node-js
-Example: https://github.com/gjeanmart/stackexchange/tree/master/24684-truffle-and-node-js
-
-For production purposes, may need Geth instead of Ganache: https://hackernoon.com/ethereum-development-walkthrough-part-2-truffle-ganache-geth-and-mist-8d6320e12269
+# WitnessChain
 
 ## Getting started
 
@@ -62,6 +42,27 @@ Your first address should be:
 0x627306090abaB3A6e1400e9345bC60c78a8BEf57
 ```
 
+## API Documentation
+
+### `POST /new`
+Creates a new address.
+
+Parameters (in request body):
+
+* `image : String` - a unique ID for the image (mad 32 characters). This may need to be a timestamp or something instead of the full URL, since this string can be no more than 32 characters.
+* `latitude : Integer` - use 6 decimal places, so that latitude `42.5` becomes `42500000`
+* `longitude : Integer` - same caveat as above
+* `price : string` - a number in wei. It may be too big to store in JavaScript, so you can put the price in a string.
+* `description : String` - no more than 32 characters long
+* `creator_address : String` - a 40-character Ethereum address for the person who took the photos
+* `receiver_address : String` - a 40-character Ethereum address for the police station to receive the photos
+* `violation_type : Integer` - unused for now, just use `1`
+
+Returns:
+
+* `success : Boolean`
+* `address : String` - the address of the newly-created contract
+
 ## Using the API
 
 See `test-mocha.js`, but for instance you can do:
@@ -104,3 +105,26 @@ X-Powered-By: Express
     "success": true
 }
 ```
+
+
+## Random links
+
+
+Start with this: http://truffleframework.com/tutorials/pet-shop
+
+Pet-shop repo: https://github.com/truffle-box/pet-shop-box
+
+This is ok but not that great: https://medium.com/etherereum-salon/hello-ethereum-solan-contract-4643118a6119
+
+Use this IDE: https://github.com/ethereum/remix-ide
+
+Test out contracts here: https://www.myetherwallet.com/#contracts
+
+Solidity tips: https://ethereumbuilders.gitbooks.io/guide/content/en/solidity_tutorials.html
+
+IPFS stuff: https://medium.com/@didil/off-chain-data-storage-ethereum-ipfs-570e030432cf
+
+To make a Node.js server: https://ethereum.stackexchange.com/questions/24684/truffle-and-node-js
+Example: https://github.com/gjeanmart/stackexchange/tree/master/24684-truffle-and-node-js
+
+For production purposes, may need Geth instead of Ganache: https://hackernoon.com/ethereum-development-walkthrough-part-2-truffle-ganache-geth-and-mist-8d6320e12269
