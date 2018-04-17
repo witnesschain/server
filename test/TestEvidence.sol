@@ -10,8 +10,8 @@ contract TestEvidence {
 
   Evidence evidence = Evidence(DeployedAddresses.Evidence());
 
-  uint[] clearImages = [1234, 2345, 3456, 4567];
-  uint[] blurredImages = [1111, 2222, 3333, 4444];
+  uint[4] clearImages = [1234, 2345, 3456, 4567];
+  uint[4] blurredImages = [1111, 2222, 3333, 4444];
   int lat = 42000000;
   int lon = -73000000;
   uint price = 1 ether;
@@ -33,8 +33,11 @@ contract TestEvidence {
 
   function testPreview() public {
     // ensure we get the blurred images out in preview
-    uint[] imagesOut = evid.preview();
-    Assert.equal(blurredImages, imagesOut, "Preview should return original blurred images");
+    uint[4] imagesOut = evid.blurredImages();
+
+    Assert.equal(imagesOut[0], evid.blurredImages[0], "HI");
+
+    /* Assert.equal(blurredImages, imagesOut, "Preview should return original blurred images"); */
   }
 
   function testPurchase() public {
@@ -59,8 +62,8 @@ contract TestEvidence {
     Assert.equal(out, true, "Should be enough money for payment to succeed");
     bought = evid.bought();
     Assert.equal(bought, true, "Bought is true");
-    uint[] imagesOut = evid.preview();
-    Assert.equal(blurredImages, imagesOut, "Preview should return original blurred images");
+    /* uint[4] imagesOut = evid.blurredImages; */
+    /* Assert.equal(blurredImages, imagesOut, "Preview should return original blurred images"); */
 
     uint256 creatorBalanceAfter = creator.balance;
     uint256 creatorBalanceAfterPredicted = creatorBalanceBefore + price;
