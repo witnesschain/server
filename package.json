@@ -7,11 +7,9 @@
     "type": "git",
     "url": "git://github.com/witnesschain/server.git"
   },
-  "directories": {
-    "test": "test"
-  },
   "scripts": {
-    "test": "mocha",
+    "test": "mocha test/mocha/test-mocha.js",
+    "truffletest": "truffle test test/truffle/test-evidence.js",
     "start": "truffle migrate && node app.js",
     "quickstart": "node app.js"
   },
@@ -29,6 +27,7 @@
     "bignumber.js": "^6.0.0",
     "body-parser": "^1.18.2",
     "express": "^4.16.3",
+    "hex2ascii": "0.0.3",
     "ip": "^1.1.5",
     "keythereum": "^1.0.3",
     "npm": "^5.8.0",
