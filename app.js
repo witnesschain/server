@@ -49,34 +49,6 @@ let publicReceivers = {}
 
 //// HELPER FUNCTIONS
 
-/**
-  Grabs all the public data about a given contract instance `inst`.
-  This is an async function so you will need to await it!
-*/
-let getContractData = async (inst) => {
-  try {
-    return {
-      creator: await inst.creator.call(),
-      receiver: await inst.receiver.call(),
-      latitude: (await inst.latitude.call()).toNumber(),
-      longitude: (await inst.longitude.call()).toNumber(),
-      timestamp: (await inst.timestamp.call()).toNumber(),
-      // don't access description directly; this getter will convert the dirty
-      // bytes32 to a nice string
-      // TODO cleaner way to do this? is there a built-in getter for description?
-      description: utils.cleanSolidityString(await inst.getDescription.call()),
-      violation_type: (await inst.violation_type.call()).toNumber(),
-      // `price` is so huge that it might screw up the JS integer class
-      // instead store it as a string
-      price: (await inst.price.call()).toString(),
-      bought: await inst.bought.call(),
-      previewed: await inst.previewed.call()
-    }
-  }
-  catch(e) {
-    throw e
-  }
-}
 
 
 //// ROUTING
@@ -134,12 +106,21 @@ app.post('/new', async (req, res) => {
       console.log(`New contract created at ${newContractAddress}`)
 
       // store that we have created this contract
-      // now storing all info about contract
-      // get most info from the contract, not from the inputs,
-      // in case the contract did any data parsing/munging
-      let contractData = await getContractData(newContract)
-      // also include the contract's address, since that is NOT in the contract data
-      contractData.address = newContractAddress
+      // normally, we'd call the cnotract to get all this relevant data,
+      // but that takes a long time so we'll use backup local copies of any data
+      // that we're confident does not get changed in the contract
+      let contractData = {
+        address: newContractAddress,
+        creator: creator,
+        receiver: receiver,
+        latitude: lat,
+        longitude: lon,
+        timestamp: newContract.timestamp.call().toNumber(),
+        description: desc,
+        violation_type: violation_type,
+        price: price,
+        // don't store price and bought cause those are dynamic
+      }
       // store this locally
       allContracts.push(contractData)
 
@@ -149,7 +130,7 @@ app.post('/new', async (req, res) => {
       })
     }
     catch (e) {
-      // console.log("ERROR: " + e)
+      console.log("ERROR: " + e)
       res.status(400).send("ERROR: " + e)
     }
 });
@@ -229,7 +210,24 @@ app.get('/public_data', async (req, res) => {
   try {
     let inst = await Evidence.at(req.query.contract_address)
 
-    var result = await getContractData(inst)
+    var result = {
+      creator: await inst.creator.call(),
+      receiver: await inst.receiver.call(),
+      latitude: (await inst.latitude.call()).toNumber(),
+      longitude: (await inst.longitude.call()).toNumber(),
+      timestamp: (await inst.timestamp.call()).toNumber(),
+      // don't access description directly; this getter will convert the dirty
+      // bytes32 to a nice string
+      // TODO cleaner way to do this? is there a built-in getter for description?
+      description: utils.cleanSolidityString(await inst.getDescription.call()),
+      violation_type: (await inst.violation_type.call()).toNumber(),
+      // `price` is so huge that it might screw up the JS integer class
+      // instead store it as a string
+      price: (await inst.price.call()).toString(),
+      bought: await inst.bought.call(),
+      previewed: await inst.previewed.call()
+    }
+
     console.log(result)
 
     res.json(result)
@@ -245,7 +243,7 @@ app.get('/public_data', async (req, res) => {
 */
 app.get('/list_contracts', async (req, res) => {
   // console.log("All created contracts: ")
-  console.log(allContracts)
+  // console.log(allContracts)
   res.json(allContracts)
 })
 
@@ -257,7 +255,7 @@ app.post('/register_receiver', async (req, res) => {
     // treat this like a set mapping address to name
     publicReceivers[receiver_address] = receiver_name
 
-    // res.send("Registered")
+    res.send("Registered")
   }
   catch(e) {
     res.status(400).send("Error: " + e)
@@ -266,7 +264,7 @@ app.post('/register_receiver', async (req, res) => {
 
 app.get('/list_receivers', async (req, res) => {
   // console.log("All receivers: ")
-  console.log(publicReceivers)
+  // console.log(publicReceivers)
   res.json(publicReceivers)
 })
 
@@ -279,10 +277,25 @@ app.post('/address', async (req, res) => {
     // use the password to generate a public/private key and address
     let password = req.body.password
 
+    // use keythereum to generate stuff
+    // usage instructions of keythereum here: https://github.com/ethereumjs/keythereum
+    // dk contains private key `privateKey`, initialization vector `iv`, salt `salt`
+    // these are BUFFERS!
+    let dk = keythereum.create()
 
+    // now generate the address
+    let keyObject = keythereum.dump(password, dk.privateKey, dk.salt, dk.iv)
+
+    // return the key object, which contains the initialization vector
+    // and salt already. just need to give the private key (which is a buffer
+    // of random bytes, so we should export in readable format)
+    res.json({
+      keyObject: keyObject,
+      // this reports the private key in hex
+      privateKey: dk.privateKey.toString('hex')
+    })
   }
   catch(e) {
     res.status(400).send("Error: " + e)
   }
-}
 })

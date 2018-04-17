@@ -249,6 +249,34 @@ describe('API', function() {
       });
     });
 
+
+    describe("Address Generation", () => {
+      it("should correctly generate an Ethereum address", (done) => {
+        request(baseURL)
+          .post("/address")
+          .send({
+            password: "testpassword"
+          })
+          .expect(200).
+          end((err, res) => {
+            if (err) {
+              throw err
+            }
+
+            // obviously, generating addresses is random, so we can't exactly
+            // test the output values.
+            // but we CAN test the structure.
+            res.body.keyObject.should.be.ok()
+            res.body.privateKey.length.should.equal(64)
+            res.body.keyObject.address.length.should.equal(40)
+            res.body.keyObject.crypto.cipherparams.iv.length.should.equal(32)
+
+            done()
+          })
+      })
+    })
+
+
     describe("Public Data", () => {
 
       it("should gather the right public data", (done) => {
