@@ -53,7 +53,8 @@ describe('API', function() {
     const RECEIVER_ADDRESS = '0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef'
     const LATITUDE = 42000000
     const LONGITUDE = -73000000
-    const PRICE = "1000000000000000000" // 1 ether, in wei
+    const PRICE_ETHER = 20 // must be whole number
+    const PRICE_WEI_STRING = PRICE_ETHER + "000000000000000000"
     const DESCRIPTION = "My Description!"
     const VIOLATION_TYPE = 1
 
@@ -71,7 +72,7 @@ describe('API', function() {
           receiver_address: RECEIVER_ADDRESS,
           latitude: LATITUDE,
           longitude: LONGITUDE,
-          price: PRICE,
+          price: PRICE_WEI_STRING,
           description: DESCRIPTION,
           violation_type: VIOLATION_TYPE
         })
@@ -132,12 +133,21 @@ describe('API', function() {
     describe("Purchasing", function(){
 
       it("should NOT let you buy with insufficient funds", function(done) {
+        // this is how much we'll try to buy with, in finney. It must be
+        // less than the price of the contract.
+        // a finney is 1/1000 of an ether and the price must be >= 1 ether
+        // so just check that we are giving a small enough amount
+        const INSUFFICIENT_AMOUNT_FINNEY = 50
+        INSUFFICIENT_AMOUNT_FINNEY.should.be.lessThan(1000)
+
+
         request(baseURL)
           .post("/purchase")
           .send({
             contract_address: contractAddress,
             receiver_address: RECEIVER_ADDRESS,
-            money_amount: 50,
+            // this is a trivially small amount
+            money_amount: INSUFFICIENT_AMOUNT_FINNEY,
             money_unit: "finney"
           })
           .expect(200).
@@ -159,7 +169,8 @@ describe('API', function() {
           .send({
             contract_address: contractAddress,
             receiver_address: WRONG_ADDRESS,
-            money_amount: 2,
+            // pay just enough money to pass
+            money_amount: PRICE_ETHER + 1,
             money_unit: "ether"
           })
           .expect(400)
@@ -178,7 +189,8 @@ describe('API', function() {
           .send({
             contract_address: contractAddress,
             receiver_address: RECEIVER_ADDRESS,
-            money_amount: 2,
+            // pay just enough money to pass
+            money_amount: PRICE_ETHER + 1,
             money_unit: "ether"
           })
           .expect(200).
@@ -199,7 +211,8 @@ describe('API', function() {
           .send({
             contract_address: contractAddress,
             receiver_address: RECEIVER_ADDRESS,
-            money_amount: 2,
+            // pay just enough money to pass
+            money_amount: PRICE_ETHER + 1,
             money_unit: "ether"
           })
           .expect(200).
@@ -302,7 +315,7 @@ describe('API', function() {
 
             // string comparison
             res.body.description.should.equal(DESCRIPTION)
-            res.body.price.should.equal(PRICE)
+            res.body.price.should.equal(PRICE_WEI_STRING)
 
             // boolean comparison
             res.body.bought.should.equal(true)
