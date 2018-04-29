@@ -53,7 +53,7 @@ describe('API', function() {
     const RECEIVER_ADDRESS = '0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef'
     const LATITUDE = 42000000
     const LONGITUDE = -73000000
-    const PRICE_ETHER = 20 // must be whole number
+    const PRICE_ETHER = 15// must be whole number
     const PRICE_WEI_STRING = PRICE_ETHER + "000000000000000000"
     const DESCRIPTION = "My Description!"
     const VIOLATION_TYPE = 1

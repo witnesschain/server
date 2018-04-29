@@ -78,6 +78,8 @@ Run `npm test` to test the server and API, and `npm run truffletest` to test jus
 
 Before you run tests, ensure the server is running! (Run the tests, `truffle test`, and the server, `npm start`, in separate terminal tabs.)
 
+Sometimes, when testing, some accounts may run out of money. That's fine - just restart Ganache from the Settings menu.
+
 
 ## Ganache
 
