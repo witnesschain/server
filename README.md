@@ -40,6 +40,8 @@ truffle test
 npm test
 ```
 
+`truffle test` is a bit finicky, so if it fails once, just try it again.
+
 To start using the API, you'll need to find the IP address that the server is running on. See the last line of the terminal output, like so:
 
 ![Terminal running npm start](images/npm-start-terminal.png)
@@ -54,7 +56,7 @@ Be sure to change the IP address accordingly, based on what you found earlier! T
 
 For other ways to use the API, see below.
 
-## Getting started
+## Older getting started docs
 
 * Download Ganache from its website.
 * `npm install -g truffle`
