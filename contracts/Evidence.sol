@@ -16,7 +16,7 @@ contract Evidence {
   event Purchased(bool success);
 
 
-  function Evidence(bytes32[4] _clear_images, bytes32[4] _blurred_images, int _lat, int _lon, uint _price, bytes32 _desc, address _creator, address _receiver, uint _violation_type) public {
+  constructor(bytes32[4] _clear_images, bytes32[4] _blurred_images, int _lat, int _lon, uint _price, bytes32 _desc, address _creator, address _receiver, uint _violation_type) public {
 
     // TODO ensure that image arrays have length (0..4), i.e. [1..3]
 

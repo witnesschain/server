@@ -1,5 +1,59 @@
 # WitnessChain
 
+## Quickstart
+
+* Download and install Ganache from `https://github.com/trufflesuite/ganache/releases`.
+
+Then run:
+
+```
+git clone https://github.com/witnesschain/server
+cd server
+npm install -g truffle
+npm install
+truffle compile
+```
+
+Then double-click to open the Ganache app. In the settings, set the mnemonic to:
+
+```
+candy maple cake sugar pudding cream honey rich smooth crumble sweet treat
+```
+
+![Ganache settings screen](images/ganache-mnemonic.png)
+
+Be sure there's no space at the end! Then hit Restart and look at the Ethereum addresses that have been generated. It should look like this:
+
+![Ganache home](images/ganache-home.png)
+
+
+Your first address should be:
+
+```
+0x627306090abaB3A6e1400e9345bC60c78a8BEf57
+```
+
+Now, run `npm start` in one terminal tab. Leave that running. In another tab, do:
+
+```
+truffle test
+npm test
+```
+
+To start using the API, you'll need to find the IP address that the server is running on. See the last line of the terminal output, like so:
+
+![Terminal running npm start](images/npm-start-terminal.png)
+
+To interact with the API, you can use curl like so:
+
+```
+curl -XGET 'http://10.252.147.83:3000/hello'
+```
+
+Be sure to change the IP address accordingly, based on what you found earlier! The above curl command should return `Hello!`.
+
+For other ways to use the API, see below.
+
 ## Getting started
 
 * Download Ganache from its website.
