@@ -53,7 +53,8 @@ let publicReceivers = {}
 
 //// ROUTING
 
-// tester endpoints
+
+// TESTER ENDPOINTS
 app.get('/hello', function (req, res) {
   res.send('Hello!')
 });
@@ -81,7 +82,7 @@ app.post('/fancy_square', async (req, res) => {
   }
 });
 
-
+// REAL ENDPOINTS
 app.post('/new', async (req, res) => {
     var clear_images = req.body.clear_images
     var blurred_images = req.body.blurred_images

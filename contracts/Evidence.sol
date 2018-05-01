@@ -71,6 +71,7 @@ contract Evidence {
   /**
   * Returns the best images available to the receiver: the previews
   * if the receiver has not purchased, or the actual images if they have
+  * purchased. People besides the intended receiver cannot access the images!
   */
   function preview() public view onlyReceiver returns (bytes32[4] _images) {
     if (bought == true) {

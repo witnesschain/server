@@ -56,46 +56,15 @@ Be sure to change the IP address accordingly, based on what you found earlier! T
 
 For other ways to use the API, see below.
 
-## Older getting started docs
-
-* Download Ganache from its website.
-* `npm install -g truffle`
-* `npm install`
-* If you have a `build` folder, do `rm -rf build`. (This is where contracts are compiled into.)
-* `truffle compile`
-
-## Running the server
-
-* Double-click the Ganache icon to get it running.
-* `npm start`
-* Then you can start running RESTful commands to interact with the blockchain via the API!
+## Restarting the server
 
 Any time you change the server code and want to restart, do `npm quickstart`.
 
 ## Testing
 
-Run `npm test` to test the server and API, and `npm run truffletest` to test just the contract.
+Before you test, ensure the server is running: open the Ganache app and then run `npm start`. In another tab, you can then run `npm test` to test the server and API, and `npm run truffletest` to test just the contract.
 
-Before you run tests, ensure the server is running! (Run the tests, `truffle test`, and the server, `npm start`, in separate terminal tabs.)
-
-Sometimes, when testing, some accounts may run out of money. That's fine - just restart Ganache from the Settings menu.
-
-
-## Ganache
-
-Use this mnemonic:
-
-```
-candy maple cake sugar pudding cream honey rich smooth crumble sweet treat
-```
-
-Make sure there are no spaces at the start or end of this string!!!
-
-Your first address should be:
-
-```
-0x627306090abaB3A6e1400e9345bC60c78a8BEf57
-```
+Sometimes, when testing, some accounts may run out of money. That's fine - just restart Ganache from the Settings menu and try testing again.
 
 ## API Documentation
 
@@ -104,11 +73,11 @@ Creates a new address.
 
 Parameters (in request body):
 
-* `clear_images : String[]` - unique IDs for all full-quality images (max 32 characters each). This may need to be a timestamp or something instead of the full URL, since this string can be no more than 32 characters. These clear images will only be shown to police stations (receivers) who purchase the evidence.
-* `blurred_images : String[]` - like above, unique IDs for all blurred images (max 32 characters each). Blurred images will be public, so identifying information should be blurred out.
-* `latitude : Integer` - use 6 decimal places, so that latitude `42.5` becomes `42500000`
+* `clear_images : String[]` - unique IDs for up to 4 full-quality images (max 32 characters each). This may need to be a timestamp or something instead of the full URL, since this string can be no more than 32 characters. These clear images will only be shown to police stations (receivers) who purchase the evidence.
+* `blurred_images : String[]` - like above, unique IDs for up to 4 blurred images (max 32 characters each). Blurred images will be public, so identifying information should be blurred out.
+* `latitude : Integer` - use 6 decimal places, so that latitude `42.5` is represented as `42500000`
 * `longitude : Integer` - same caveat as above
-* `price : string` - a number in wei. It may be too big to store in JavaScript, so you can put the price in a string.
+* `price : String` - a number in wei. It may be too big to store as an integer in JavaScript, so you should put the price in a string.
 * `description : String` - no more than 32 characters long
 * `creator_address : String` - a 40-character Ethereum address for the person who took the photos. Also include the `0x` at the front, making it 42 characters.
 * `receiver_address : String` - a 40-character Ethereum address for the police station to receive the photos. Also include the `0x` at the front, making it 42 characters.
@@ -132,7 +101,7 @@ Parameters:
 
 Returns:
 
-* `images : String[]` - an array of string IDs.
+* `images : String[]` - an array of string IDs. You can rehydrate these into the full image URLs on the client-side.
 
 
 
@@ -145,11 +114,11 @@ Parameters:
 * `receiver_address : String` - the address of the police station that is buying the evidence file (includes `0x`)
 * `contract_address : String` - the address of the desired contract, from `/new`. Also include the `0x` at the front, making it 42 characters.
 * `money_amount : String/Number` - how much money, in `money_unit` units, the police station is offering. If you send too much money, you will be refunded anything above the price of the contract.
-* `money_unit : String` - one of `wei`, `ether`, `finney`, or `szabo`.
+* `money_unit : String` - one of `wei`, `finney`, `szabo`, or `ether`.
 
 Returns:
 
-* `success: Boolean`
+* `success: Boolean` - whether or not the purchasing worked. Sufficient funds must be passed and only the intended recipient can purchase.
 
 
 ### `GET /public_data`
@@ -166,7 +135,7 @@ Returns:
 * receiver
 * latitude
 * longitude
-* `timestamp : Integer` - Unix timestamp of creation
+* `timestamp : Integer` - Unix timestamp of creation (seconds since the Unix epoch in 1970)
 * description
 * violation_type
 * price
