@@ -12,7 +12,7 @@ contract('Evidence', function([creator, receiver]) {
   // const vars for testing
   //uint[] _clear_images, uint[] _blurred_images, int _lat, int _long, uint _price, string _desc, address _receiver, uint _violation_type
   var clear_images = ["buzz", "woody", "marlin", "nemo"];
-  var blurred_images = ["zzub", "ydoow", "nilram", "omen"];
+  var blurred_images = ["1522986482.29358.jpg", "1523468596.14902.jpg", "1523468630.93496.jpg", "1523468680.33496.jpg"];
   var lat = 42000000;
   var lon = -73000000;
   var price = 1e+18; // 1 ether, in wei

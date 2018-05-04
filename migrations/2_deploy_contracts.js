@@ -3,7 +3,7 @@ var Evidence = artifacts.require("Evidence");
 module.exports = function(deployer) {
   //uint[] _clearImages, uint[] _blurredImages, int _lat, int _long, uint _price, string _desc, address _receiver, uint _violation_type
   var clearImages = ["buzz", "woody", "marlin", "nemo"];
-  var blurredImages = ["zzub", "ydoow", "nilram", "omen"];
+  var blurredImages = ["1522986482.29358.jpg", "1523468596.14902.jpg", "1523468630.93496.jpg", "1523468680.33496.jpg"];
   var lat = 42000000;
   var lon = -73000000;
   var price = "1000000000000000000"; // 1 ether, in wei
