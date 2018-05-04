@@ -170,25 +170,14 @@ Returns a JSON object containing:
 You can find the address, initialization vector, and salt in the `keyObject`.
 
 
+## Files and Folders
 
-## Random links
-
-
-Start with this: http://truffleframework.com/tutorials/pet-shop
-
-Pet-shop repo: https://github.com/truffle-box/pet-shop-box
-
-This is ok but not that great: https://medium.com/etherereum-salon/hello-ethereum-solan-contract-4643118a6119
-
-Use this IDE: https://github.com/ethereum/remix-ide
-
-Test out contracts here: https://www.myetherwallet.com/#contracts
-
-Solidity tips: https://ethereumbuilders.gitbooks.io/guide/content/en/solidity_tutorials.html
-
-IPFS stuff: https://medium.com/@didil/off-chain-data-storage-ethereum-ipfs-570e030432cf
-
-To make a Node.js server: https://ethereum.stackexchange.com/questions/24684/truffle-and-node-js
-Example: https://github.com/gjeanmart/stackexchange/tree/master/24684-truffle-and-node-js
-
-For production purposes, may need Geth instead of Ganache: https://hackernoon.com/ethereum-development-walkthrough-part-2-truffle-ganache-geth-and-mist-8d6320e12269
+* `contracts`: where our Solidity contracts live.
+* `experiment`: for running experiments to measure the effectiveness and cost of our contracts.
+* `images`: for use in this README.
+* `migrations`: scripts that Truffle runs to upload our contract onto the blockchain.
+* `src`: utility scripts for our Node.js server.
+* `test`: Mocha test suites.
+* `app.js`: our Node.js server and API.
+* `truffle.js`: used to run Truffle, don't touch.
+* `bs-config.json`: for building purposes, don't touch.
