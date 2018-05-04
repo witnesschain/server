@@ -4,7 +4,7 @@
 
 First, download and install Ganache from `https://github.com/trufflesuite/ganache/releases`.
 
-Then run:
+Then run the following:
 
 ```
 git clone https://github.com/witnesschain/server
