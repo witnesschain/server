@@ -2,7 +2,7 @@
 
 ## Quickstart
 
-* Download and install Ganache from `https://github.com/trufflesuite/ganache/releases`.
+First, download and install Ganache from `https://github.com/trufflesuite/ganache/releases`.
 
 Then run:
 
