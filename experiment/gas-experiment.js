@@ -48,7 +48,7 @@ let contractAddress = null;
 
 
 let testCreation = () => {
-  const NUM_TO_CREATE = 10
+  const NUM_TO_CREATE = 100
 
   for (let i = 0; i < NUM_TO_CREATE; i++) {
     let result = createContract().expect(200).end(() => {
