@@ -47,6 +47,12 @@ let allContracts = []
 let publicReceivers = {}
 
 
+// CONSTANTS
+// ethereum is dumb and only lets you use strings (bytes32 under the hood)
+// use 32 characters. So enforce this max length.
+const MAX_STRING_LENGTH = 32
+
+
 //// HELPER FUNCTIONS
 
 
@@ -119,7 +125,7 @@ app.post('/new', async (req, res) => {
         latitude: lat,
         longitude: lon,
         timestamp: newContract.timestamp.call().toNumber(),
-        description: desc,
+        description: desc.substring(0, MAX_STRING_LENGTH), // cap string length
         violation_type: violation_type,
         price: price,
         // don't store price and bought cause those are dynamic
@@ -141,7 +147,8 @@ app.post('/new', async (req, res) => {
 // access with: http POST :3000/preview
 app.post('/preview', async (req, res) => {
   try {
-    let inst = await Evidence.at(req.body.contract_address)
+    let contractAddress = req.body.contract_address
+    let inst = await Evidence.at(contractAddress)
 
     // the returned body is a list of images as bytes32s
     // need to clean
@@ -150,6 +157,8 @@ app.post('/preview', async (req, res) => {
     })
     let images = rawImages.map(utils.bytes32ToString)
     // console.log("PREVIEWED:", images)
+
+    console.log(`Previewing images for contract ${contractAddress}:`, images)
 
     res.json({
       images: images

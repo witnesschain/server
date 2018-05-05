@@ -47,15 +47,15 @@ describe('API', function() {
 
     /* VARIABLES */
     // params for the contracts
-    const CLEAR_IMAGES = ["buzz", "woody", "marlin", "nemo"]
-    const BLURRED_IMAGES = ["zzub", "ydoow", "nilram", "omen"]
+    const CLEAR_IMAGES = ["12345.png", "23456.png", "34567.png", "45678.png"]
+    const BLURRED_IMAGES = ["qwert.png", "werty.png", "ertyu.png", "rtyui.png"]
     const CREATOR_ADDRESS = '0xf17f52151EbEF6C7334FAD080c5704D77216b732'
     const RECEIVER_ADDRESS = '0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef'
     const LATITUDE = 42000000
     const LONGITUDE = -73000000
     const PRICE_ETHER = 15// must be whole number
     const PRICE_WEI_STRING = PRICE_ETHER + "000000000000000000"
-    const DESCRIPTION = "My Description!"
+    const DESCRIPTION = "Car on Oxford St."
     const VIOLATION_TYPE = 1
 
 
