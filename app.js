@@ -182,7 +182,7 @@ app.post('/purchase', async (req, res) => {
 
     const args = purchaseResult.logs[0].args
     const success = args.success
-    console.log(`Purchase successful?: ${success}`)
+    console.log(`Purchase successful? ${success}`)
     res.json({
       success: success
     })
@@ -218,7 +218,7 @@ app.get('/public_data', async (req, res) => {
       bought: await inst.bought.call()
     }
 
-    console.log(`Getting public data of contract ${req.query.contract_address}`)
+    console.log(`Dumping public data of contract ${req.query.contract_address}:`)
     console.log(result)
 
     res.json(result)
