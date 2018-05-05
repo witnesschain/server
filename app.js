@@ -125,7 +125,7 @@ app.post('/new', async (req, res) => {
         latitude: lat,
         longitude: lon,
         timestamp: newContract.timestamp.call().toNumber(),
-        description: desc.substring(0, MAX_STRING_LENGTH), // cap string length
+        description: desc.substring(0, MAX_STRING_LENGTH - 1), // cap string length, reduce by 1 to be safe
         violation_type: violation_type,
         price: price,
         // don't store price and bought cause those are dynamic
@@ -182,7 +182,7 @@ app.post('/purchase', async (req, res) => {
 
     const args = purchaseResult.logs[0].args
     const success = args.success
-    console.log(`Purchase successful: ${success}`)
+    console.log(`Purchase successful?: ${success}`)
     res.json({
       success: success
     })
@@ -218,6 +218,7 @@ app.get('/public_data', async (req, res) => {
       bought: await inst.bought.call()
     }
 
+    console.log(`Getting public data of contract ${req.query.contract_address}`)
     console.log(result)
 
     res.json(result)
